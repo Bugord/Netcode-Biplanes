@@ -41,3 +41,9 @@ TagManager:
   - name: Default
     uniqueID: 0
     locked: 0
+  - name: Background
+    uniqueID: 4086473043
+    locked: 0
+  - name: Plane
+    uniqueID: 1564564777
+    locked: 0
