@@ -1,7 +1,4 @@
-using System.Net;
 using System.Text.RegularExpressions;
-using Netcode.Transports.LiteNetLib;
-using Netcode.Transports.Ruffles;
 using TMPro;
 using Unity.Netcode;
 using Unity.Netcode.Transports.UTP;
@@ -14,21 +11,26 @@ public class NetworkService : MonoBehaviour
 
     public void StartHost()
     {
-        var utpTransport = (RufflesTransport)NetworkManager.Singleton.NetworkConfig.NetworkTransport;
+        var utpTransport = (UnityTransport)NetworkManager.Singleton.NetworkConfig.NetworkTransport;
         if (!utpTransport) {
             return;
         }
-        
-        utpTransport.Port = 7777;
+        utpTransport.ConnectionData = new UnityTransport.ConnectionAddressData() {
+            Port = 7777,
+            ServerListenAddress = "0.0.0.0"
+        };
+
         NetworkManager.Singleton.StartHost();
     }
 
     public void StartClient()
     {
-        var utpTransport = (RufflesTransport)NetworkManager.Singleton.NetworkConfig.NetworkTransport;
+        var utpTransport = (UnityTransport)NetworkManager.Singleton.NetworkConfig.NetworkTransport;
         if (utpTransport) {
-            utpTransport.ConnectAddress = Sanitize(inputField.text);
-            utpTransport.Port = 7777;
+            utpTransport.ConnectionData = new UnityTransport.ConnectionAddressData() {
+                Address = Sanitize(inputField.text),
+                Port = 7777
+            };
         }
         if (!NetworkManager.Singleton.StartClient()) {
             Debug.LogError("Failed to start client.");
