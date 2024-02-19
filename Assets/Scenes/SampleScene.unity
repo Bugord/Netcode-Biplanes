@@ -378,13 +378,13 @@ Rigidbody2D:
   m_UseAutoMass: 0
   m_Mass: 1
   m_LinearDrag: 1
-  m_AngularDrag: 0.05
+  m_AngularDrag: 1
   m_GravityScale: 1
   m_Material: {fileID: 0}
   m_Interpolate: 0
   m_SleepingMode: 1
   m_CollisionDetection: 0
-  m_Constraints: 0
+  m_Constraints: 4
 --- !u!212 &1006666542
 SpriteRenderer:
   m_ObjectHideFlags: 0
@@ -466,7 +466,5 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   rigidbody2D: {fileID: 1006666541}
   planeData: {fileID: 11400000, guid: af9442da8cdd8bf46b739c73cc6807b2, type: 2}
-  thrustForce: 9
-  liftForce: 9.81
   maxSpeed: 7
   rorationCooldown: 0.15
