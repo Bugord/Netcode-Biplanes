@@ -1,9 +1,10 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using Unity.Netcode;
 using UnityEngine;
 
-public class Plane : MonoBehaviour
+public class Plane : NetworkBehaviour
 {
     [SerializeField]
     private Rigidbody2D rigidbody2D;
@@ -78,6 +79,10 @@ public class Plane : MonoBehaviour
 
     private void ChangeDirection()
     {
+        if (!IsOwner) {
+            return;
+        }
+        
         var moveLeft = Input.GetKey(KeyCode.A);
         var moveRight = Input.GetKey(KeyCode.D);
 
