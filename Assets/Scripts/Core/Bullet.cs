@@ -11,12 +11,26 @@ public class Bullet : NetworkBehaviour
     public void Config(Vector2 position, Quaternion rotation)
     {
         transform.SetPositionAndRotation(position, rotation);
-        Destroy(gameObject, Lifetime);
+        Invoke(nameof(DestroyBullet), Lifetime);
     }
 
     [Rpc(SendTo.Everyone)]
     public void SetVelocityRpc(Vector2 velocity)
     {
         rigidbody2D.velocity = velocity;
+    }
+
+    private void DestroyBullet()
+    {
+        NetworkObject.Despawn();
+    }
+
+    private void OnTriggerEnter2D(Collider2D col)
+    {
+        if (col.TryGetComponent<Health>(out var health)) {
+            health.TakeDamage();
+        }
+
+        NetworkObject.Despawn();
     }
 }

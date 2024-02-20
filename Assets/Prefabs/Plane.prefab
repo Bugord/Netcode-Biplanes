@@ -10,16 +10,19 @@ GameObject:
   m_Component:
   - component: {fileID: 1764666995977850191}
   - component: {fileID: 5384087882334252562}
+  - component: {fileID: 941321967336843671}
   - component: {fileID: 5787431192891002545}
   - component: {fileID: 3783583579799466372}
   - component: {fileID: 3913556558949926047}
   - component: {fileID: 7731353336138202683}
+  - component: {fileID: 4356825447702769145}
   - component: {fileID: 2281662996208077972}
+  - component: {fileID: 2406033044062199318}
   - component: {fileID: 7751234168310781865}
   - component: {fileID: 4275215820531385819}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: Plane
-  m_TagString: Untagged
+  m_TagString: Player
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -33,7 +36,7 @@ Transform:
   m_GameObject: {fileID: 5049044826729094222}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -9.16, y: -0.2, z: 0}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -87,12 +90,34 @@ SpriteRenderer:
   m_FlipX: 0
   m_FlipY: 0
   m_DrawMode: 0
-  m_Size: {x: 0.22, y: 0.15}
+  m_Size: {x: 1.4375, y: 1}
   m_AdaptiveModeThreshold: 0.5
   m_SpriteTileMode: 0
   m_WasSpriteAssigned: 1
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
+--- !u!95 &941321967336843671
+Animator:
+  serializedVersion: 7
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5049044826729094222}
+  m_Enabled: 1
+  m_Avatar: {fileID: 0}
+  m_Controller: {fileID: 9100000, guid: 9e4ed6f6b99a48d4f944f7fedf7ddbd5, type: 2}
+  m_CullingMode: 0
+  m_UpdateMode: 0
+  m_ApplyRootMotion: 0
+  m_LinearVelocityBlending: 0
+  m_StabilizeFeet: 0
+  m_AnimatePhysics: 0
+  m_WarningMessage: 
+  m_HasTransformHierarchy: 1
+  m_AllowConstantClipSamplingOptimization: 1
+  m_KeepAnimatorStateOnDisable: 0
+  m_WriteDefaultValuesOnDisable: 0
 --- !u!50 &5787431192891002545
 Rigidbody2D:
   serializedVersion: 4
@@ -158,13 +183,13 @@ BoxCollider2D:
   m_SpriteTilingProperty:
     border: {x: 0, y: 0, z: 0, w: 0}
     pivot: {x: 0.5, y: 0.5}
-    oldSize: {x: 1.375, y: 0.9375}
-    newSize: {x: 0.22, y: 0.15}
+    oldSize: {x: 1.4375, y: 1}
+    newSize: {x: 1.4375, y: 1}
     adaptiveTilingThreshold: 0.5
     drawMode: 0
     adaptiveTiling: 0
   m_AutoTiling: 0
-  m_Size: {x: 1.375, y: 0.9375}
+  m_Size: {x: 1.4375, y: 1}
   m_EdgeRadius: 0
 --- !u!114 &3913556558949926047
 MonoBehaviour:
@@ -199,10 +224,26 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 73a77e7536ae27c48829681a11c4872a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  animator: {fileID: 941321967336843671}
+  control: {fileID: 4356825447702769145}
+  health: {fileID: 2406033044062199318}
+  edgeDistance: 14.5
+--- !u!114 &4356825447702769145
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5049044826729094222}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8c9992c49d234b228614abfb27c493f4, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
   rigidbody2D: {fileID: 5787431192891002545}
   planeData: {fileID: 11400000, guid: af9442da8cdd8bf46b739c73cc6807b2, type: 2}
-  maxSpeed: 7
-  rorationCooldown: 0.15
+  maxSpeed: 10
+  rorationCooldown: 0.1
 --- !u!114 &2281662996208077972
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -218,6 +259,19 @@ MonoBehaviour:
   rigidbody2D: {fileID: 5787431192891002545}
   bulletPrefab: {fileID: 1352290292807581933, guid: 9a585ef832eabf4498408a83f960cd2b, type: 3}
   fireCooldown: 0.2
+--- !u!114 &2406033044062199318
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5049044826729094222}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f8db015eb5c44e39bca6aaa9b9f6fca6, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  maxHealthpoints: 3
 --- !u!114 &7751234168310781865
 MonoBehaviour:
   m_ObjectHideFlags: 0

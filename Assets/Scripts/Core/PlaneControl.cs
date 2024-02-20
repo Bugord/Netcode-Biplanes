@@ -1,10 +1,10 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using Unity.Netcode;
 using UnityEngine;
 
-public class Plane : NetworkBehaviour
+public class PlaneControl : NetworkBehaviour
 {
     [SerializeField]
     private Rigidbody2D rigidbody2D;
@@ -26,6 +26,8 @@ public class Plane : NetworkBehaviour
     private Angle currentAngle;
     private List<Angle> anglesList;
     private bool isRight = true;
+
+    public bool IsTakenOff { get; private set; }
 
     private void Awake()
     {
@@ -50,32 +52,28 @@ public class Plane : NetworkBehaviour
             rigidbody2D.velocity = rigidbody2D.velocity.normalized * maxSpeed;
         }
     }
-
-    private void SetModifiers()
+    
+    private void OnCollisionExit2D(Collision2D col)
     {
-        engine = planeData.engineForceModifiers[currentAngle] * planeData.engineForce;
-        lift = planeData.liftForceModifiers[currentAngle] * planeData.liftForce;
-
-        if (!isRight) {
-            engine = engine * new Vector2(-1, 1);
-            lift = lift * new Vector2(-1, 1);
+        if (col.gameObject.CompareTag("Ground")) {
+            IsTakenOff = true;
+            Debug.Log($"{name}: taken off");
         }
     }
 
-    private void DrawDebugLines()
+    public void Reset()
     {
-        var position = (Vector2)transform.position;
-
-        Debug.DrawLine(position, position + Physics2D.gravity / 5f, Color.red);
-        Debug.DrawLine(position, position + engine / 5f, Color.green);
-        Debug.DrawLine(position, position + lift / 5f, Color.blue);
-        Debug.DrawLine(position, position + (Physics2D.gravity + engine + lift) / 5f, Color.magenta);
-    }
-
-    private void RotateSprite()
-    {
-        transform.rotation =
-            isRight ? Quaternion.Euler(0, 0, 90 - GetRotataion()) : Quaternion.Euler(0, 0, GetRotataion() + 90);
+        rigidbody2D.velocity = Vector2.zero;
+        currentAngle = Angle.Front;
+        isRight = true;
+            
+        if (!NetworkObject.IsOwnedByServer) {
+            isRight = false;
+            transform.localScale = new Vector3(1, -1, 1);
+        }
+        
+        RotateSprite();
+        IsTakenOff = false;
     }
 
     private void ChangeDirection()
@@ -127,29 +125,46 @@ public class Plane : NetworkBehaviour
         currentAngle = anglesList[currentIndex];
     }
 
+    private void RotateSprite()
+    {
+        transform.rotation =
+            isRight ? Quaternion.Euler(0, 0, 90 - GetRotataion()) : Quaternion.Euler(0, 0, GetRotataion() + 90);
+    }
+
+    private void SetModifiers()
+    {
+        engine = planeData.engineForceModifiers[currentAngle] * planeData.engineForce;
+        lift = planeData.liftForceModifiers[currentAngle] * planeData.liftForce;
+
+        if (!isRight) {
+            engine = engine * new Vector2(-1, 1);
+            lift = lift * new Vector2(-1, 1);
+        }
+    }
+
     private float GetRotataion()
     {
-        switch (currentAngle) {
-            case Angle.Up:
-                return 0;
-            case Angle.UpUpFront:
-                return 22;
-            case Angle.UpFront:
-                return 45;
-            case Angle.UpFrontFront:
-                return 67;
-            case Angle.Front:
-                return 90;
-            case Angle.DownFrontFront:
-                return 113;
-            case Angle.DownFront:
-                return 135;
-            case Angle.DownDownFront:
-                return 157;
-            case Angle.Down:
-                return 180;
-        }
+        return currentAngle switch {
+            Angle.Up => 0,
+            Angle.UpUpFront => 22,
+            Angle.UpFront => 45,
+            Angle.UpFrontFront => 67,
+            Angle.Front => 90,
+            Angle.DownFrontFront => 113,
+            Angle.DownFront => 135,
+            Angle.DownDownFront => 157,
+            Angle.Down => 180,
+            _ => 0
+        };
+    }
+    
+    private void DrawDebugLines()
+    {
+        var position = (Vector2)transform.position;
 
-        return 0;
+        Debug.DrawLine(position, position + Physics2D.gravity / 5f, Color.red);
+        Debug.DrawLine(position, position + engine / 5f, Color.green);
+        Debug.DrawLine(position, position + lift / 5f, Color.blue);
+        Debug.DrawLine(position, position + (Physics2D.gravity + engine + lift) / 5f, Color.magenta);
     }
 }

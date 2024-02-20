@@ -44,6 +44,6 @@ public class Weapon : NetworkBehaviour
         var bullet = NetworkObjectPool.Singleton.GetNetworkObject(bulletPrefab.gameObject).GetComponent<Bullet>();
         bullet.Config(transform.position + transform.right, transform.rotation);
         bullet.GetComponent<NetworkObject>().Spawn(true);
-        bullet.SetVelocityRpc(rigidbody2D.velocity + (Vector2)transform.right * 10f);
+        bullet.SetVelocityRpc((Vector2)transform.right * 15f);
     }
 }
