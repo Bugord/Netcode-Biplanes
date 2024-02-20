@@ -278,7 +278,7 @@ BoxCollider2D:
     border: {x: 1.515625, y: 4.640625, z: 0.25, w: 4.828125}
     pivot: {x: 0.5, y: 0.5}
     oldSize: {x: 13.84375, y: 11.25}
-    newSize: {x: 108.87, y: 64.59124}
+    newSize: {x: 110.2, y: 64.59124}
     adaptiveTilingThreshold: 0.5
     drawMode: 2
     adaptiveTiling: 0
@@ -333,7 +333,7 @@ SpriteRenderer:
   m_FlipX: 0
   m_FlipY: 0
   m_DrawMode: 2
-  m_Size: {x: 108.87, y: 64.59124}
+  m_Size: {x: 110.2, y: 64.59124}
   m_AdaptiveModeThreshold: 0.5
   m_SpriteTileMode: 0
   m_WasSpriteAssigned: 1
@@ -348,7 +348,7 @@ Transform:
   m_GameObject: {fileID: 439378790}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -0.0727, y: 48.226, z: 0}
+  m_LocalPosition: {x: 0, y: 48.226, z: 0}
   m_LocalScale: {x: 1.5625001, y: 1.5625, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -1498,6 +1498,75 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   m_Padding: {x: -8, y: -5, z: -8, w: -5}
   m_Softness: {x: 0, y: 0}
+--- !u!1 &1878571542
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1878571543}
+  - component: {fileID: 1878571544}
+  - component: {fileID: 1878571545}
+  m_Layer: 0
+  m_Name: NetwokObjectPool
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1878571543
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1878571542}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: -1.1145482, y: 1.4708791, z: -0.043341175}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1878571544
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1878571542}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d5a57f767e5e46a458fc5d3c628d0cbb, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  GlobalObjectIdHash: 659733703
+  InScenePlacedSourceGlobalObjectIdHash: 0
+  AlwaysReplicateAsRoot: 0
+  SynchronizeTransform: 1
+  ActiveSceneSynchronization: 0
+  SceneMigrationSynchronization: 1
+  SpawnWithObservers: 1
+  DontDestroyWithOwner: 0
+  AutoObjectParentSync: 1
+--- !u!114 &1878571545
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1878571542}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f5ec3b931bee4a419712099fec796947, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  pooledPrefabsList:
+  - prefab: {fileID: 7689472883258377054, guid: 9a585ef832eabf4498408a83f960cd2b, type: 3}
+    prewarmCount: 30
 --- !u!1 &1912950217
 GameObject:
   m_ObjectHideFlags: 0
@@ -1771,5 +1840,6 @@ SceneRoots:
   - {fileID: 519420032}
   - {fileID: 439378793}
   - {fileID: 1611239228}
+  - {fileID: 1878571543}
   - {fileID: 416781528}
   - {fileID: 1247667400}

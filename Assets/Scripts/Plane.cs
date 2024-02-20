@@ -17,8 +17,9 @@ public class Plane : NetworkBehaviour
 
     [SerializeField]
     private float rorationCooldown;
+
     private float lastRotationTime;
-    
+
     private Vector2 engine;
     private Vector2 lift;
 
@@ -82,7 +83,7 @@ public class Plane : NetworkBehaviour
         if (!IsOwner) {
             return;
         }
-        
+
         var moveLeft = Input.GetKey(KeyCode.A);
         var moveRight = Input.GetKey(KeyCode.D);
 
@@ -90,11 +91,11 @@ public class Plane : NetworkBehaviour
             return;
         }
 
-        lastRotationTime = Time.time;
-
         if (!moveLeft && !moveRight) {
             return;
         }
+
+        lastRotationTime = Time.time;
 
         var currentIndex = anglesList.IndexOf(currentAngle);
         if (moveLeft) {

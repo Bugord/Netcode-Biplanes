@@ -14,6 +14,7 @@ GameObject:
   - component: {fileID: 3783583579799466372}
   - component: {fileID: 3913556558949926047}
   - component: {fileID: 7731353336138202683}
+  - component: {fileID: 2281662996208077972}
   - component: {fileID: 7751234168310781865}
   - component: {fileID: 4275215820531385819}
   m_Layer: 0
@@ -202,6 +203,21 @@ MonoBehaviour:
   planeData: {fileID: 11400000, guid: af9442da8cdd8bf46b739c73cc6807b2, type: 2}
   maxSpeed: 7
   rorationCooldown: 0.15
+--- !u!114 &2281662996208077972
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5049044826729094222}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 19058cc58aa448a2970757dc8d0d1efa, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  rigidbody2D: {fileID: 5787431192891002545}
+  bulletPrefab: {fileID: 1352290292807581933, guid: 9a585ef832eabf4498408a83f960cd2b, type: 3}
+  fireCooldown: 0.2
 --- !u!114 &7751234168310781865
 MonoBehaviour:
   m_ObjectHideFlags: 0
