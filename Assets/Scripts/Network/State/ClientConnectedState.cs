@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using UI;
+using UnityEngine;
 
 namespace Network.State
 {
@@ -10,6 +11,8 @@ namespace Network.State
 
         public override void Enter()
         {
+            NavigationSystem.Instance.PopToRoot();
+            NavigationSystem.Instance.Push<OnlineScreen>();
         }
 
         public override void Exit()
