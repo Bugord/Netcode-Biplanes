@@ -1,9 +1,12 @@
 using System;
+using Core;
 using Unity.Netcode;
 using UnityEngine;
 
 public class Plane : NetworkBehaviour
 {
+    public event Action<PlaneCrashReason> Died;
+    
     [SerializeField]
     private Animator animator;
     
@@ -15,6 +18,7 @@ public class Plane : NetworkBehaviour
 
     [SerializeField]
     private float edgeDistance;
+    
     private static readonly int DieHash = Animator.StringToHash("Die");
 
     public override void OnNetworkSpawn()
@@ -60,6 +64,8 @@ public class Plane : NetworkBehaviour
         if (IsServer) {
             Invoke(nameof(RespawnRpc), 0.5f);
         }
+        
+        Died?.Invoke(PlaneCrashReason.Destroyed);
     }
 
     [Rpc(SendTo.Everyone)]

@@ -33,6 +33,10 @@ namespace Network.State
                 var reason = JsonUtility.ToJson(ConnectStatus.GenericDisconnect);
                 ConnectionManager.NetworkManager.DisconnectClient(clientId, reason);
             }
+
+            if (ConnectionManager.NetworkManager.ConnectedClientsIds.Count == 2) {
+                GameManager.Instance.StartSession();
+            }
         }
 
         public override void OnClientDisconnect(ulong clientId)
@@ -95,7 +99,6 @@ namespace Network.State
 
                 // connection approval will create a player object for you
                 response.Approved = true;
-                response.CreatePlayerObject = true;
                 return;
             }
 

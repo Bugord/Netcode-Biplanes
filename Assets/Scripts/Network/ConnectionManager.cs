@@ -52,6 +52,10 @@ namespace Network
 
         private void OnDestroy()
         {
+            if (NetworkManager == null) {
+                return;
+            }
+
             NetworkManager.OnClientConnectedCallback -= OnClientConnectedCallback;
             NetworkManager.OnClientDisconnectCallback -= OnClientDisconnectCallback;
             NetworkManager.OnServerStarted -= OnServerStarted;

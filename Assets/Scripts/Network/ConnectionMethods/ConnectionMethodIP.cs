@@ -11,6 +11,8 @@ class ConnectionMethodIP : BaseConnectionMethod
     private readonly string ipAddress;
     private readonly ushort port;
 
+    private const string HostIpAddress = "0.0.0.0";
+
     public ConnectionMethodIP(string ip, ushort port, ConnectionManager connectionManager, string playerName)
         : base(connectionManager, playerName)
     {
@@ -36,6 +38,6 @@ class ConnectionMethodIP : BaseConnectionMethod
     {
         SetConnectionPayload(GetPlayerId(), PlayerName); // Need to set connection payload for host as well, as host is a client too
         var utp = (UnityTransport)ConnectionManager.NetworkManager.NetworkConfig.NetworkTransport;
-        utp.SetConnectionData(ipAddress, port);
+        utp.SetConnectionData(HostIpAddress, port);
     }
 }

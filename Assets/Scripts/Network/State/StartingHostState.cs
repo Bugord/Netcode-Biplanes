@@ -47,11 +47,10 @@ namespace Network.State
 
                 SessionManager<SessionPlayerData>.Instance.SetupConnectingPlayerSessionData(clientId,
                     connectionPayload.playerId,
-                    new SessionPlayerData(clientId, connectionPayload.playerName, true));
+                    new SessionPlayerData(clientId, connectionPayload.playerName, true, true));
 
                 // connection approval will create a player object for you
                 response.Approved = true;
-                response.CreatePlayerObject = true;
             }
         }
 

@@ -22,11 +22,19 @@ public class Bullet : NetworkBehaviour
 
     private void DestroyBullet()
     {
+        if (!IsSpawned) {
+            return;
+        }
+        
         NetworkObject.Despawn();
     }
 
     private void OnTriggerEnter2D(Collider2D col)
     {
+        if (!IsServer) {
+            return;
+        }
+        
         if (col.TryGetComponent<Health>(out var health)) {
             health.TakeDamage();
         }

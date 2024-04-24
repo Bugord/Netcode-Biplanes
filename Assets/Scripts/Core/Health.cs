@@ -13,6 +13,10 @@ public class Health : NetworkBehaviour
     
     public void Reset()
     {
+        if (!IsServer) {
+            return;
+        }
+        
         healthpoints.Value = maxHealthpoints;
     }
 
