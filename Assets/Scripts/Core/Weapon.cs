@@ -42,7 +42,7 @@ public class Weapon : NetworkBehaviour
     private void FireRpc()
     {
         var bullet = NetworkObjectPool.Singleton.GetNetworkObject(bulletPrefab.gameObject).GetComponent<Bullet>();
-        bullet.Config(transform.position + transform.right, transform.rotation);
+        bullet.Init(transform.position + transform.right, transform.rotation);
         bullet.GetComponent<NetworkObject>().Spawn(true);
         bullet.SetVelocityRpc((Vector2)transform.right * 15f);
     }

@@ -8,7 +8,7 @@ public class Bullet : NetworkBehaviour
 
     private const float Lifetime = 5f;
 
-    public void Config(Vector2 position, Quaternion rotation)
+    public void Init(Vector2 position, Quaternion rotation)
     {
         transform.SetPositionAndRotation(position, rotation);
         Invoke(nameof(DestroyBullet), Lifetime);

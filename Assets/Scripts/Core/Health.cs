@@ -9,6 +9,8 @@ public class Health : NetworkBehaviour
     [SerializeField]
     private int maxHealthpoints;
 
+    public int CurrentHealth => healthpoints.Value;
+
     private readonly NetworkVariable<int> healthpoints = new NetworkVariable<int>();
     
     public void Reset()

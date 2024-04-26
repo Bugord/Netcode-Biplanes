@@ -228,6 +228,7 @@ MonoBehaviour:
   control: {fileID: 4356825447702769145}
   health: {fileID: 2406033044062199318}
   edgeDistance: 14.5
+  networkTransform: {fileID: 7751234168310781865}
 --- !u!114 &4356825447702769145
 MonoBehaviour:
   m_ObjectHideFlags: 0

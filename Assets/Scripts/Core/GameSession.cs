@@ -1,4 +1,5 @@
-﻿using Network;
+﻿using System.Collections.Generic;
+using Network;
 using Unity.Netcode;
 using UnityEngine;
 
@@ -15,69 +16,53 @@ namespace Core
         [SerializeField]
         private Transform clientSpawnPoint;
 
+        private readonly Dictionary<Team, int> teamsScore = new Dictionary<Team, int>();
+
         private Plane hostPlane;
         private Plane clientPlane;
-
-        private int hostScore;
-        private int clientScore;
 
         private SessionManager<SessionPlayerData> SessionManager => SessionManager<SessionPlayerData>.Instance;
 
         public void StartSession()
         {
             SpawnPrefabForPlayers();
-            
-            hostScore = 0;
-            clientScore = 0;
+
+            teamsScore[Team.Red] = 0;
+            teamsScore[Team.Blue] = 0;
         }
 
         private void SpawnPrefabForPlayers()
         {
             foreach (var playerData in SessionManager.PlayersDataList) {
-                if (playerData.IsHost) {
-                    hostPlane = Instantiate(planePrefab, serverSpawnPoint.position, Quaternion.identity);
-                    hostPlane.GetComponent<NetworkObject>().SpawnWithOwnership(playerData.ClientID);
-                    hostPlane.Died += OnHostPlaneCrash;
-                }
-                else {
-                    clientPlane = Instantiate(planePrefab, clientSpawnPoint.position, Quaternion.identity);
-                    clientPlane.GetComponent<NetworkObject>().SpawnWithOwnership(playerData.ClientID);
-                    clientPlane.Died += OnclientPlanePlaneCrash;
-                }
+                hostPlane = Instantiate(planePrefab);   
+
+                hostPlane.GetComponent<NetworkObject>().SpawnWithOwnership(playerData.ClientID);
+                hostPlane.InitRpc(playerData.IsHost ? Team.Red : Team.Blue, playerData.IsHost ? serverSpawnPoint.position : clientSpawnPoint.position);
+
+                hostPlane.Crashed += OnPlaneCrash;
             }
         }
 
-        private void OnclientPlanePlaneCrash(PlaneCrashReason reason)
-        {
-            OnPlaneCrash(reason, true);
-        }
-
-        private void OnHostPlaneCrash(PlaneCrashReason reason)
-        {
-            OnPlaneCrash(reason, false);
-        }
-
-        private void OnPlaneCrash(PlaneCrashReason reason, bool isHostPlane)
+        private void OnPlaneCrash(Plane plane, PlaneCrashReason reason)
         {
             switch (reason) {
-                case PlaneCrashReason.Destroyed when isHostPlane:
-                    clientScore++;
-                    break;
                 case PlaneCrashReason.Destroyed:
-                    hostScore++;
-                    break;
-                case PlaneCrashReason.Suicide when isHostPlane:
-                    clientScore--;
+                    ChangeScore(plane.Team == Team.Red ? Team.Blue : Team.Red, 1);
                     break;
                 case PlaneCrashReason.Suicide:
-                    hostScore--;
+                    ChangeScore(plane.Team, -1);
                     break;
             }
+        }
 
-            hostScore = Mathf.Max(hostScore, 0);
-            clientScore = Mathf.Max(clientScore, 0);
-            
-            Debug.Log($"Host:Client {hostScore}:{clientScore}");
+        private void ChangeScore(Team team, int score)
+        {
+            teamsScore[team] += score;
+
+            teamsScore[Team.Red] = Mathf.Max(teamsScore[Team.Red], 0);
+            teamsScore[Team.Blue] = Mathf.Max(teamsScore[Team.Blue], 0);
+
+            Debug.Log($"Host:Client {teamsScore[Team.Red]}:{teamsScore[Team.Blue]}");
         }
     }
 }
