@@ -18,15 +18,13 @@ public class Plane : NetworkBehaviour
     [SerializeField]
     private Health health;
 
-    [SerializeField]
     private float edgeDistance;
-
-    public Team Team { get; private set; }
-
     private Vector3 spawnPosition;
 
     private static readonly int DieHash = Animator.StringToHash("Die");
 
+    public Team Team { get; private set; }
+    
     public override void OnNetworkSpawn()
     {
         name = $"Plane {(IsOwnedByServer ? "Server" : "Client")}";
@@ -60,10 +58,11 @@ public class Plane : NetworkBehaviour
     }
 
     [Rpc(SendTo.Everyone)]
-    public void InitRpc(Team team, Vector3 spawnPosition)
+    public void InitRpc(Team team, Vector3 spawnPosition, float edgeDistance)
     {
         Team = team;
         this.spawnPosition = spawnPosition;
+        this.edgeDistance = edgeDistance;
         
         RespawnRpc();
     }

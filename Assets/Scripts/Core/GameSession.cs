@@ -16,10 +16,10 @@ namespace Core
         [SerializeField]
         private Transform clientSpawnPoint;
 
-        private readonly Dictionary<Team, int> teamsScore = new Dictionary<Team, int>();
+        [SerializeField]
+        private float edgeDistance = 14.5f;
 
-        private Plane hostPlane;
-        private Plane clientPlane;
+        private readonly Dictionary<Team, int> teamsScore = new Dictionary<Team, int>();
 
         private SessionManager<SessionPlayerData> SessionManager => SessionManager<SessionPlayerData>.Instance;
 
@@ -34,12 +34,12 @@ namespace Core
         private void SpawnPrefabForPlayers()
         {
             foreach (var playerData in SessionManager.PlayersDataList) {
-                hostPlane = Instantiate(planePrefab);   
+                var plane = Instantiate(planePrefab);   
 
-                hostPlane.GetComponent<NetworkObject>().SpawnWithOwnership(playerData.ClientID);
-                hostPlane.InitRpc(playerData.IsHost ? Team.Red : Team.Blue, playerData.IsHost ? serverSpawnPoint.position : clientSpawnPoint.position);
+                plane.GetComponent<NetworkObject>().SpawnWithOwnership(playerData.ClientID);
+                plane.InitRpc(playerData.IsHost ? Team.Red : Team.Blue, playerData.IsHost ? serverSpawnPoint.position : clientSpawnPoint.position, edgeDistance);
 
-                hostPlane.Crashed += OnPlaneCrash;
+                plane.Crashed += OnPlaneCrash;
             }
         }
 
