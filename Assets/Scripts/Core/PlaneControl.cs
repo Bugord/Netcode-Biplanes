@@ -30,11 +30,9 @@ public class PlaneControl : NetworkBehaviour
     private bool isEngineEnabled;
     
     public bool IsTakenOff { get; private set; }
-    
 
     private void Awake()
     {
-        Debug.Log($"{name} - Awake - {rigidbody2D.isKinematic}");
         anglesList = Enum.GetValues(typeof(Angle)).Cast<Angle>().ToList();
         currentAngle = Angle.Front;
     }
@@ -46,8 +44,6 @@ public class PlaneControl : NetworkBehaviour
         RotateSprite();
         SetModifiers();
         DrawDebugLines();
-        
-        Debug.Log($"{name} - {rigidbody2D.isKinematic}");
     }
 
     private void FixedUpdate()
@@ -64,19 +60,16 @@ public class PlaneControl : NetworkBehaviour
     {
         if (col.gameObject.CompareTag("Ground")) {
             IsTakenOff = true;
-            Debug.Log($"{name}: taken off");
         }
     }
     
     public void OnEnable()
     {
-        Debug.Log($"{name} - OnEnable - {rigidbody2D.isKinematic}");
         rigidbody2D.isKinematic = false;
     }
     
     public void OnDisable()
     {
-        Debug.Log($"{name} - OnDisable - {rigidbody2D.isKinematic}");
         rigidbody2D.velocity = Vector2.zero;
         rigidbody2D.isKinematic = true;
     }

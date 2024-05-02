@@ -12,7 +12,6 @@ namespace Network.State
 
         public override void Enter()
         {
-            SceneManager.LoadScene("GameScene");
         }
 
         public override void Exit()

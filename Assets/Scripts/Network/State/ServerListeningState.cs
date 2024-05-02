@@ -13,6 +13,8 @@ namespace Network.State
         // used in ApprovalCheck. This is intended as a bit of light protection against DOS attacks that rely on sending silly big buffers of garbage.
         private const int MaxConnectPayload = 1024;
         private bool minPlayerConnected = false;
+        
+        private SessionManager<SessionPlayerData> SessionManager => SessionManager<SessionPlayerData>.Instance;
 
         public ServerListeningState(ConnectionManager connectionManager) : base(connectionManager)
         {
@@ -25,11 +27,19 @@ namespace Network.State
 
         public override void Exit()
         {
+            SessionManager.OnServerEnded();
         }
 
         public override void OnClientConnected(ulong clientId)
         {
-            Debug.Log($"Client {clientId} connected to the server.");
+            Debug.Log($"[{nameof(ServerListeningState)}] {clientId} connected to the server.");
+            
+            var playerData = SessionManager<SessionPlayerData>.Instance.GetPlayerData(clientId);
+            if (playerData == null) {
+                Debug.LogError($"[{nameof(ServerListeningState)}] No player data associated with client {clientId}");
+                var reason = JsonUtility.ToJson(ConnectStatus.GenericDisconnect);
+                ConnectionManager.NetworkManager.DisconnectClient(clientId, reason);
+            }
 
             if (!minPlayerConnected && ConnectionManager.NetworkManager.ConnectedClientsIds.Count == 2) {
                 minPlayerConnected = true;
@@ -39,13 +49,24 @@ namespace Network.State
 
         public override void OnClientDisconnect(ulong clientId)
         {
-            Debug.Log($"Client {clientId} disconnected from the server.");
+            var playerId = SessionManager.GetPlayerId(clientId);
+            if (playerId == null) {
+                return;
+            }
+
+            var sessionData = SessionManager.GetPlayerData(playerId);
+            if (sessionData.HasValue) {
+                Debug.Log($"[{nameof(ServerListeningState)}] Player {sessionData.Value.PlayerName} disconnected");
+            }
+
+            SessionManager.DisconnectClient(clientId);
+            
             if (ConnectionManager.NetworkManager.ConnectedClientsIds.Count == 1 &&
                 ConnectionManager.NetworkManager.ConnectedClients.ContainsKey(clientId)) {
                 // This callback is invoked by the last client disconnecting from the server
                 // Here the networked session is shut down immediately, but if we wanted to allow reconnection, we could
                 // include a delay in a coroutine that could get cancelled when a client reconnects
-                Debug.Log("All clients have disconnected from the server. Shutting down");
+                Debug.Log($"[{nameof(ServerListeningState)}] All clients have disconnected from the server. Shutting down");
                 ConnectionManager.ChangeState(ConnectionManager.Offline);
                 Quit();
             }
@@ -85,6 +106,8 @@ namespace Network.State
             NetworkManager.ConnectionApprovalResponse response)
         {
             var connectionData = request.Payload;
+            var clientId = request.ClientNetworkId;
+
             if (connectionData.Length > MaxConnectPayload) {
                 // If connectionData too high, deny immediately to avoid wasting time on the server. This is intended as
                 // a bit of light protection against DOS attacks that rely on sending silly big buffers of garbage.
@@ -98,6 +121,9 @@ namespace Network.State
             var gameReturnStatus = GetConnectStatus(connectionPayload);
 
             if (gameReturnStatus == ConnectStatus.Success) {
+                SessionManager.SetupConnectingPlayerSessionData(clientId, connectionPayload.playerId,
+                    new SessionPlayerData(clientId, connectionPayload.playerName, true));
+                
                 response.Approved = true;
                 return;
             }
@@ -115,6 +141,10 @@ namespace Network.State
             if (connectionPayload.applicationVersion != Application.version) {
                 return ConnectStatus.IncompatibleVersions;
             }
+            
+            return SessionManager<SessionPlayerData>.Instance.IsDuplicateConnection(connectionPayload.playerId)
+                ? ConnectStatus.LoggedInAgain
+                : ConnectStatus.Success;
 
             return ConnectStatus.Success;
             //todo add support to deny connection if map or game version is different

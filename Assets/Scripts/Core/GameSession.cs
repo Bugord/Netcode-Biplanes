@@ -26,9 +26,10 @@ namespace Core
         private readonly Dictionary<Team, int> teamsScore = new Dictionary<Team, int>();
 
         private SessionManager<SessionPlayerData> SessionManager => SessionManager<SessionPlayerData>.Instance;
-
+        
         public void StartSession()
         {
+            Debug.Log($"[{nameof(GameSession)}] Starting session");
             SpawnPrefabForPlayers();
 
             teamsScore[Team.Red] = 0;
@@ -37,11 +38,14 @@ namespace Core
 
         private void SpawnPrefabForPlayers()
         {
-            foreach (var playerData in SessionManager.PlayersDataList) {
-                var plane = Instantiate(planePrefab);   
+            for (var i = 0; i < SessionManager.PlayersDataList.Count; i++) {
+                var playerData = SessionManager.PlayersDataList[i];
+                Debug.Log($"[{nameof(GameSession)}] Spawning object for player {playerData.PlayerName}");
+
+                var plane = Instantiate(planePrefab);
 
                 plane.GetComponent<NetworkObject>().SpawnWithOwnership(playerData.ClientID);
-                plane.InitRpc(playerData.IsHost ? Team.Red : Team.Blue, playerData.IsHost ? serverSpawnPoint.position : clientSpawnPoint.position, edgeDistance);
+                plane.InitRpc((Team)i, i == 0 ? serverSpawnPoint.position : clientSpawnPoint.position, edgeDistance);
 
                 plane.Crashed += OnPlaneCrash;
             }
@@ -68,7 +72,7 @@ namespace Core
             teamsScore[Team.Red] = Mathf.Max(teamsScore[Team.Red], 0);
             teamsScore[Team.Blue] = Mathf.Max(teamsScore[Team.Blue], 0);
 
-            Debug.Log($"Host:Client {teamsScore[Team.Red]}:{teamsScore[Team.Blue]}");
+            Debug.Log($"Red:Blue {teamsScore[Team.Red]}:{teamsScore[Team.Blue]}");
         }
         
         public IEnumerator RespawnWithDelay(Plane plane, float delay)
