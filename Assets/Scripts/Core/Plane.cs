@@ -1,8 +1,7 @@
 using System;
 using Core;
-using Unity.Mathematics;
 using Unity.Netcode;
-using Unity.Netcode.Components;
+using UnityEditor;
 using UnityEngine;
 
 public class Plane : NetworkBehaviour
@@ -18,17 +17,29 @@ public class Plane : NetworkBehaviour
     [SerializeField]
     private Health health;
 
+    [SerializeField]
+    private GameObject smokeParticles;
+    
+    [SerializeField]
+    private GameObject fireParticles;
+
     private float edgeDistance;
     private Vector3 spawnPosition;
 
-    private static readonly int DieHash = Animator.StringToHash("Die");
+    private static readonly int IsAliveHash = Animator.StringToHash("IsAlive");
 
     public Team Team { get; private set; }
-    
+
+    private void Awake()
+    {
+    }
+
     public override void OnNetworkSpawn()
     {
         name = $"Plane {(IsOwnedByServer ? "Server" : "Client")}";
 
+        health.HealthChanged += OnHealthChanged;
+            
         if (!IsServer) {
             return;
         }
@@ -38,6 +49,8 @@ public class Plane : NetworkBehaviour
 
     public override void OnNetworkDespawn()
     {
+        health.HealthChanged -= OnHealthChanged;
+        
         if (!IsServer) {
             return;
         }
@@ -51,9 +64,8 @@ public class Plane : NetworkBehaviour
             return;
         }
 
-        var playerPos = transform.position;
-        if (Mathf.Abs(playerPos.x) > edgeDistance) {
-            transform.position = new Vector3(playerPos.x > 0 ? -edgeDistance : edgeDistance, playerPos.y);
+        if (Mathf.Abs(transform.position.x) > edgeDistance) {
+            TeleportToOtherSideRpc();
         }
     }
 
@@ -63,31 +75,46 @@ public class Plane : NetworkBehaviour
         Team = team;
         this.spawnPosition = spawnPosition;
         this.edgeDistance = edgeDistance;
-        
+
         RespawnRpc();
+    }
+
+    [Rpc(SendTo.Everyone)]
+    private void RespawnRpc()
+    {
+        transform.position = spawnPosition;
+        control.enabled = true;
+
+        animator.SetBool(IsAliveHash, true);
+        ResetComponents();
     }
 
     [Rpc(SendTo.Everyone)]
     private void DieRpc()
     {
-        animator.SetTrigger(DieHash);
-        GetComponent<Rigidbody2D>().isKinematic = true;
-        GetComponent<Rigidbody2D>().velocity = Vector2.zero;
-
-        if (IsServer) {
-            Invoke(nameof(RespawnRpc), 0.5f);
-        }
-
+        control.enabled = false;
+        
+        animator.SetBool(IsAliveHash, false);
         Crashed?.Invoke(this, health.CurrentHealth == 0 ? PlaneCrashReason.Destroyed : PlaneCrashReason.Suicide);
     }
 
     [Rpc(SendTo.Everyone)]
-    public void RespawnRpc()
+    private void TeleportToOtherSideRpc()
     {
-        GetComponent<Rigidbody2D>().isKinematic = false;
-        transform.position = spawnPosition;
+        var playerPos = transform.position;
+        transform.position = new Vector3(playerPos.x > 0 ? -edgeDistance : edgeDistance, playerPos.y);
+    }
+
+    public void Respawn()
+    {
+        RespawnRpc();
+    }
+
+    private void ResetComponents()
+    {
         control.Reset();
         health.Reset();
+        UpdateParticlesState();
     }
 
     private void OnCollisionEnter2D(Collision2D collision2D)
@@ -105,5 +132,17 @@ public class Plane : NetworkBehaviour
         }
 
         Debug.Log($"{name}: collided with {collision2D.collider.name}");
+    }
+
+    private void OnHealthChanged(int previous, int current)
+    {
+        UpdateParticlesState();
+    }
+
+    private void UpdateParticlesState()
+    {
+        var currentHealth = health.CurrentHealth;
+        smokeParticles.SetActive(currentHealth == 2);
+        fireParticles.SetActive(currentHealth == 1);
     }
 }

@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System.Collections;
+using System.Collections.Generic;
 using Network;
 using Unity.Netcode;
 using UnityEngine;
@@ -18,6 +19,9 @@ namespace Core
 
         [SerializeField]
         private float edgeDistance = 14.5f;
+
+        [SerializeField]
+        private float respawnTime = 1f;
 
         private readonly Dictionary<Team, int> teamsScore = new Dictionary<Team, int>();
 
@@ -53,6 +57,8 @@ namespace Core
                     ChangeScore(plane.Team, -1);
                     break;
             }
+
+            StartCoroutine(RespawnWithDelay(plane, respawnTime));
         }
 
         private void ChangeScore(Team team, int score)
@@ -63,6 +69,12 @@ namespace Core
             teamsScore[Team.Blue] = Mathf.Max(teamsScore[Team.Blue], 0);
 
             Debug.Log($"Host:Client {teamsScore[Team.Red]}:{teamsScore[Team.Blue]}");
+        }
+        
+        public IEnumerator RespawnWithDelay(Plane plane, float delay)
+        {
+            yield return new WaitForSeconds(delay);
+            plane.Respawn();
         }
     }
 }

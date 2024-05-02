@@ -27,20 +27,27 @@ public class PlaneControl : NetworkBehaviour
     private List<Angle> anglesList;
     private bool isRight = true;
 
+    private bool isEngineEnabled;
+    
     public bool IsTakenOff { get; private set; }
+    
 
     private void Awake()
     {
+        Debug.Log($"{name} - Awake - {rigidbody2D.isKinematic}");
         anglesList = Enum.GetValues(typeof(Angle)).Cast<Angle>().ToList();
         currentAngle = Angle.Front;
     }
 
     private void Update()
     {
+        ChangeEngineEnabled();
         ChangeDirection();
         RotateSprite();
         SetModifiers();
         DrawDebugLines();
+        
+        Debug.Log($"{name} - {rigidbody2D.isKinematic}");
     }
 
     private void FixedUpdate()
@@ -52,7 +59,7 @@ public class PlaneControl : NetworkBehaviour
             rigidbody2D.velocity = rigidbody2D.velocity.normalized * maxSpeed;
         }
     }
-    
+
     private void OnCollisionExit2D(Collision2D col)
     {
         if (col.gameObject.CompareTag("Ground")) {
@@ -60,13 +67,28 @@ public class PlaneControl : NetworkBehaviour
             Debug.Log($"{name}: taken off");
         }
     }
+    
+    public void OnEnable()
+    {
+        Debug.Log($"{name} - OnEnable - {rigidbody2D.isKinematic}");
+        rigidbody2D.isKinematic = false;
+    }
+    
+    public void OnDisable()
+    {
+        Debug.Log($"{name} - OnDisable - {rigidbody2D.isKinematic}");
+        rigidbody2D.velocity = Vector2.zero;
+        rigidbody2D.isKinematic = true;
+    }
 
     public void Reset()
     {
         rigidbody2D.velocity = Vector2.zero;
         currentAngle = Angle.Front;
         isRight = true;
-            
+        isEngineEnabled = false;
+        rigidbody2D.isKinematic = false;
+
         if (!NetworkObject.IsOwnedByServer) {
             isRight = false;
             transform.localScale = new Vector3(1, -1, 1);
@@ -76,9 +98,23 @@ public class PlaneControl : NetworkBehaviour
         IsTakenOff = false;
     }
 
+    private void ChangeEngineEnabled()
+    {
+        if (Input.GetKey(KeyCode.W)) {
+            isEngineEnabled = true;
+        }
+        if (Input.GetKey(KeyCode.S)) {
+            isEngineEnabled = false;
+        }
+    }
+
     private void ChangeDirection()
     {
         if (!IsOwner) {
+            return;
+        }
+
+        if (!isEngineEnabled) {
             return;
         }
 
@@ -135,6 +171,11 @@ public class PlaneControl : NetworkBehaviour
     {
         engine = planeData.engineForceModifiers[currentAngle] * planeData.engineForce;
         lift = planeData.liftForceModifiers[currentAngle] * planeData.liftForce;
+
+        if (!isEngineEnabled) {
+            engine = Vector2.zero;
+            lift = Vector2.zero;
+        }
 
         if (!isRight) {
             engine = engine * new Vector2(-1, 1);
