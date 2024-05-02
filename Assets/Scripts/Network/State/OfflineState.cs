@@ -1,4 +1,5 @@
 ﻿using UI;
+using Unity.Multiplayer;
 
 namespace Network.State
 {
@@ -13,12 +14,16 @@ namespace Network.State
         public override void Enter()
         {
             ConnectionManager.NetworkManager.Shutdown();
-            NavigationSystem.PopToRoot();
-            NavigationSystem.Push<MainMenuScreen>();
         }
 
         public override void Exit()
         {
+        }
+        
+        public override void StartServerIP(string ipaddress, ushort port)
+        {
+            ConnectionManager.StartingServer.Configure(ipaddress, port);
+            ConnectionManager.ChangeState(ConnectionManager.StartingServer);
         }
 
         public override void StartClientIP(string playerName, string ipaddress, int port)

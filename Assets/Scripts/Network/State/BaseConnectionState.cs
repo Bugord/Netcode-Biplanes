@@ -27,6 +27,10 @@ namespace Network.State
         {
         }
 
+        public virtual void StartServerIP(string ipaddress, ushort port)
+        {
+        }
+
         public virtual void StartClientIP(string playerName, string ipaddress, int port)
         {
         }

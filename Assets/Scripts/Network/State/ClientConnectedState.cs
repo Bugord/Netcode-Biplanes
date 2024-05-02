@@ -1,5 +1,6 @@
 ﻿using UI;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 namespace Network.State
 {
@@ -11,8 +12,7 @@ namespace Network.State
 
         public override void Enter()
         {
-            NavigationSystem.Instance.PopToRoot();
-            NavigationSystem.Instance.Push<OnlineScreen>();
+            SceneManager.LoadScene("GameScene");
         }
 
         public override void Exit()

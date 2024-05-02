@@ -8,5 +8,6 @@ namespace Network
         public string playerId;
         public string playerName;
         public bool isDebug;
+        public string applicationVersion;
     }
 }

@@ -40,7 +40,8 @@ namespace Network.ConnectionMethods
             var payload = JsonUtility.ToJson(new ConnectionPayload() {
                 playerId = playerId,
                 playerName = playerName,
-                isDebug = Debug.isDebugBuild
+                isDebug = Debug.isDebugBuild,
+                applicationVersion = Application.version
             });
 
             var payloadBytes = System.Text.Encoding.UTF8.GetBytes(payload);

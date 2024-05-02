@@ -1,5 +1,4 @@
 ﻿using UI;
-using Unity.Multiplayer.Samples.BossRoom;
 using Unity.Netcode;
 using UnityEngine;
 
