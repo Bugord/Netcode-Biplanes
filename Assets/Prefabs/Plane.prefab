@@ -53,6 +53,7 @@ ParticleSystemRenderer:
   m_RayTraceProcedural: 0
   m_RayTracingAccelStructBuildFlagsOverride: 0
   m_RayTracingAccelStructBuildFlags: 1
+  m_SmallMeshCulling: 1
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
@@ -4852,8 +4853,9 @@ GameObject:
   - component: {fileID: 4356825447702769145}
   - component: {fileID: 2281662996208077972}
   - component: {fileID: 2406033044062199318}
-  - component: {fileID: 7751234168310781865}
-  - component: {fileID: 4275215820531385819}
+  - component: {fileID: 4109747872074542708}
+  - component: {fileID: 562642268827831542}
+  - component: {fileID: 5555164646221818676}
   m_Layer: 7
   m_Name: Plane
   m_TagString: Player
@@ -4897,6 +4899,7 @@ SpriteRenderer:
   m_RayTraceProcedural: 0
   m_RayTracingAccelStructBuildFlagsOverride: 0
   m_RayTracingAccelStructBuildFlags: 1
+  m_SmallMeshCulling: 1
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
@@ -5109,7 +5112,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   maxHealthpoints: 3
---- !u!114 &7751234168310781865
+--- !u!114 &4109747872074542708
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -5118,7 +5121,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 5049044826729094222}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: df2868252ab5c4d1da357e8f11f1b524, type: 3}
+  m_Script: {fileID: 11500000, guid: 97616b67982a4be48d957d421e422433, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   UseUnreliableDeltas: 0
@@ -5140,7 +5143,8 @@ MonoBehaviour:
   InLocalSpace: 0
   Interpolate: 0
   SlerpPosition: 0
---- !u!114 &4275215820531385819
+  StaleDataHandling: 1
+--- !u!114 &562642268827831542
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -5152,6 +5156,19 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 80d7c879794dfda4687da0e400131852, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!114 &5555164646221818676
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5049044826729094222}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 05d9a8b5e33e4080aff1c1be1c90c4d5, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  anticipatedNetworkTransform: {fileID: 4109747872074542708}
 --- !u!1 &8232539152109237904
 GameObject:
   m_ObjectHideFlags: 0
@@ -5205,6 +5222,7 @@ ParticleSystemRenderer:
   m_RayTraceProcedural: 0
   m_RayTracingAccelStructBuildFlagsOverride: 0
   m_RayTracingAccelStructBuildFlags: 1
+  m_SmallMeshCulling: 1
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:

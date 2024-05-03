@@ -1368,6 +1368,7 @@ GameObject:
   - component: {fileID: 1855376183}
   - component: {fileID: 1855376182}
   - component: {fileID: 1855376184}
+  - component: {fileID: 1855376185}
   m_Layer: 0
   m_Name: GameManager
   m_TagString: Untagged
@@ -1415,11 +1416,20 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a32572d4adb84219b8ac4cd982d1a90e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  planePrefab: {fileID: 7731353336138202683, guid: e204f7f52f3c4a440ba65479373a00e0, type: 3}
+  planePrefab: {fileID: 5220322714833663955, guid: 32793090521ff7f4fa7cef0d5012de14, type: 3}
   serverSpawnPoint: {fileID: 1757583484}
   clientSpawnPoint: {fileID: 1024320761}
   edgeDistance: 14.5
   respawnTime: 1
+--- !u!1652712579 &1855376185
+MultiplayerRolesData:
+  m_ObjectHideFlags: 2
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1855376181}
+  m_GameObjectRolesMask: 2
+  m_ComponentsRolesMasks: []
 --- !u!1 &1878571542
 GameObject:
   m_ObjectHideFlags: 0

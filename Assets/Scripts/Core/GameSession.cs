@@ -9,7 +9,7 @@ namespace Core
     public class GameSession : MonoBehaviour
     {
         [SerializeField]
-        private Plane planePrefab;
+        private NetworkedPlaneController planePrefab;
 
         [SerializeField]
         private Transform serverSpawnPoint;
@@ -40,14 +40,8 @@ namespace Core
         {
             for (var i = 0; i < SessionManager.PlayersDataList.Count; i++) {
                 var playerData = SessionManager.PlayersDataList[i];
-                Debug.Log($"[{nameof(GameSession)}] Spawning object for player {playerData.PlayerName}");
-
-                var plane = Instantiate(planePrefab);
-
+                var plane = Instantiate(planePrefab, i == 0 ? serverSpawnPoint.position : clientSpawnPoint.position, Quaternion.identity);
                 plane.GetComponent<NetworkObject>().SpawnWithOwnership(playerData.ClientID);
-                plane.InitRpc((Team)i, i == 0 ? serverSpawnPoint.position : clientSpawnPoint.position, edgeDistance);
-
-                plane.Crashed += OnPlaneCrash;
             }
         }
 
