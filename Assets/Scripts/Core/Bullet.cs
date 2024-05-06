@@ -51,7 +51,7 @@ public class Bullet : NetworkBehaviour
             return;
         }
 
-        if (TryGetComponent<NetworkedPlaneController>(out var networkedPlaneController)) {
+        if (col.TryGetComponent<NetworkedPlaneController>(out var networkedPlaneController)) {
             if (OwnerClientId == networkedPlaneController.OwnerClientId) {
                 return;
             }
