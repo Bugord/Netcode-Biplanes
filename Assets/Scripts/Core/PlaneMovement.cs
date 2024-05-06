@@ -6,7 +6,7 @@ namespace Core
 {
     public class PlaneMovement : MonoBehaviour
     {
-        public event Action TookOff;
+        public event Action EngineStarted;
 
         [SerializeField]
         private Rigidbody2D rigidbody2D;
@@ -37,7 +37,8 @@ namespace Core
 
         private bool isFacingRight;
 
-        private bool didTookOff;
+        public bool WasEngineStarted { get; private set; }
+        public bool DidTookOff { get; private set; }
        
         private float EdgeDistance => networkedPlaneController.EdgeDistance;
 
@@ -83,6 +84,14 @@ namespace Core
             clientNetworkTransform.Teleport(position, transform.rotation, transform.localScale);
         }
 
+        public void Reset()
+        {
+            isEngineOn = false;
+            WasEngineStarted = false;
+            DidTookOff = false;
+            EnableMovement();
+        }
+
         public void DisableMovement()
         {
             rigidbody2D.velocity = Vector2.zero;
@@ -98,9 +107,9 @@ namespace Core
         {
             if (Input.GetKey(KeyCode.W)) {
                 isEngineOn = true;
-                if (!didTookOff) {
-                    didTookOff = true;
-                    TookOff?.Invoke();
+                if (!WasEngineStarted) {
+                    WasEngineStarted = true;
+                    EngineStarted?.Invoke();
                 }
             }
             if (Input.GetKey(KeyCode.S)) {
@@ -111,6 +120,10 @@ namespace Core
         private void OnAngleChanged(float angle)
         {
             UpdateModifiers(angle);
+            
+            if (!DidTookOff) {
+                DidTookOff = true;
+            }
             isFacingRight = transform.right.x > 0;
         }
 

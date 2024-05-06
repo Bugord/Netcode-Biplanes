@@ -19,6 +19,7 @@ namespace Core
         private float angleDelta;
 
         private bool isMirrored;
+        private bool isRotationEnabled;
 
         private void Awake()
         {
@@ -43,12 +44,31 @@ namespace Core
                 return;
             }
 
+            if (!isRotationEnabled) {
+                return;
+            }
+
             ProcessAngleChange();
         }
 
         public void Init(bool isMirrored)
         {
             this.isMirrored = isMirrored;
+        }
+
+        public void Reset()
+        {
+            currentAngleIndex.Value = 0;
+        }
+        
+        public void EnableRotation()
+        {
+            isRotationEnabled = true;
+        }
+
+        public void DisableRotation()
+        {
+            isRotationEnabled = false;
         }
 
         private void ProcessAngleChange()

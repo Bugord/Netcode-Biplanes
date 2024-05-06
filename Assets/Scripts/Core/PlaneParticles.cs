@@ -5,9 +5,6 @@ namespace Core
     public class PlaneParticles : MonoBehaviour
     {
         [SerializeField]
-        private Health health;
-
-        [SerializeField]
         private GameObject smokeParticles;
 
         [SerializeField]
@@ -16,21 +13,32 @@ namespace Core
         [SerializeField]
         private GameObject explosion;
 
-        private void OnEnable()
+        public void Reset()
         {
-            health.HealthChanged += OnHealthChanged;
+            smokeParticles.SetActive(false);
+            fireParticles.SetActive(false);
+            explosion.SetActive(false);
         }
 
-        private void OnDisable()
+        public void DisableDamageEffects()
         {
-            health.HealthChanged -= OnHealthChanged;
+            smokeParticles.SetActive(false);
+            fireParticles.SetActive(false);
         }
 
-        private void OnHealthChanged(int currentHealth)
+        public void PlayExplosion()
         {
-            smokeParticles.SetActive(currentHealth == 2);
-            fireParticles.SetActive(currentHealth == 1);
-            explosion.SetActive(currentHealth == 0);
+            explosion.SetActive(true);
+        }
+
+        public void SmokeSetActive(bool isActive)
+        {
+            smokeParticles.SetActive(isActive);
+        }
+
+        public void FireSetActive(bool isActive)
+        {
+            smokeParticles.SetActive(isActive);
         }
     }
 }

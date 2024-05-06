@@ -44,7 +44,7 @@ public class Plane : NetworkBehaviour
             return;
         }
 
-        health.Died += DieRpc;
+        health.HealthEmpty += DieRpc;
     }
 
     public override void OnNetworkDespawn()
@@ -55,7 +55,7 @@ public class Plane : NetworkBehaviour
             return;
         }
 
-        health.Died -= DieRpc;
+        health.HealthEmpty -= DieRpc;
     }
 
     private void Update()

@@ -272,6 +272,7 @@ MonoBehaviour:
   planeSpriteController: {fileID: 3779647886779789308}
   health: {fileID: 5304711510785712308}
   planeMovement: {fileID: 5461207984092915866}
+  planeParticles: {fileID: 8233085328630137065}
 --- !u!1652712579 &3059844241354429864
 MultiplayerRolesData:
   m_ObjectHideFlags: 2
@@ -370,7 +371,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: bbe8068180a64ad29a1ba18b6cf72a50, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  health: {fileID: 5304711510785712308}
   smokeParticles: {fileID: 5230151710775994807}
   fireParticles: {fileID: 3363457435959431568}
   explosion: {fileID: 8052094535886226786}

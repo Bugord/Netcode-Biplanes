@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class Health : NetworkBehaviour
 {
-    public event Action Died;
+    public event Action HealthEmpty;
     public event Action<int> HealthChanged;
 
     [SerializeField]
@@ -47,7 +47,7 @@ public class Health : NetworkBehaviour
         HealthChanged?.Invoke(current);
 
         if (current == 0) {
-            Died?.Invoke();
+            HealthEmpty?.Invoke();
         }
     }
 

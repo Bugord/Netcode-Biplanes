@@ -36,19 +36,28 @@ namespace Core
 
         private void OnEnable()
         {
-            health.HealthChanged += OnHealthChanged;
+            health.HealthEmpty += OnPlaneHealthEmpty;
         }
 
         private void OnDisable()
         {
-            health.HealthChanged -= OnHealthChanged;
+            health.HealthEmpty -= OnPlaneHealthEmpty;
         }
 
-        private void OnHealthChanged(int health)
+        public void OnPlaneCrashed()
         {
-            if (health == 0) {
-                Crashed?.Invoke(this, PlaneCrashReason.Destroyed);
-            }
+            OnPlaneCrashedRpc();
+        }
+
+        private void OnPlaneHealthEmpty()
+        {
+            Crashed?.Invoke(this, PlaneCrashReason.Destroyed);
+        }
+        
+        [Rpc(SendTo.Server)]
+        private void OnPlaneCrashedRpc()
+        {
+            Crashed?.Invoke(this, PlaneCrashReason.Suicide);
         }
 
         public override void OnNetworkSpawn()
