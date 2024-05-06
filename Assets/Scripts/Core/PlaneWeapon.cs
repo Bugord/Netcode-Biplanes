@@ -38,15 +38,15 @@ public class PlaneWeapon : NetworkBehaviour
 
         lastFireTime = Time.time;
 
-        FireRpc();
+        FireRpc(transform.position + transform.right * bulletSpawnDistance, transform.rotation);
     }
 
     [Rpc(SendTo.Server)]
-    private void FireRpc()
+    private void FireRpc(Vector3 position, Quaternion rotation)
     {
         var bullet = NetworkObjectPool.Singleton.GetNetworkObject(bulletPrefab.gameObject).GetComponent<Bullet>();
-        
+
         bullet.GetComponent<NetworkObject>().SpawnWithOwnership(OwnerClientId, true);
-        bullet.Init(transform.position + transform.right * bulletSpawnDistance, transform.rotation);
+        bullet.Init(position, rotation);
     }
 }
