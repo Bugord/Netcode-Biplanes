@@ -40,13 +40,20 @@ namespace Core
         {
             for (var i = 0; i < SessionManager.PlayersDataList.Count; i++) {
                 var playerData = SessionManager.PlayersDataList[i];
-                var plane = Instantiate(planePrefab, i == 0 ? serverSpawnPoint.position : clientSpawnPoint.position, Quaternion.identity);
-                plane.GetComponent<NetworkedPlaneController>().Init(i == 0 ? Team.Blue : Team.Red);
+                var team = i == 0 ? Team.Blue : Team.Red;
+                var spawnPosition = team == Team.Blue ? serverSpawnPoint.position : clientSpawnPoint.position;
+                
+                var plane = Instantiate(planePrefab, spawnPosition, Quaternion.identity);
+                var networkedPlaneController = plane.GetComponent<NetworkedPlaneController>();
+                networkedPlaneController.Init(team, spawnPosition);
+                
                 plane.GetComponent<NetworkObject>().SpawnAsPlayerObject(playerData.ClientID);
+
+                networkedPlaneController.Crashed += OnPlaneCrash;
             }
         }
 
-        private void OnPlaneCrash(Plane plane, PlaneCrashReason reason)
+        private void OnPlaneCrash(NetworkedPlaneController plane, PlaneCrashReason reason)
         {
             switch (reason) {
                 case PlaneCrashReason.Destroyed:
@@ -70,7 +77,7 @@ namespace Core
             Debug.Log($"Red:Blue {teamsScore[Team.Red]}:{teamsScore[Team.Blue]}");
         }
         
-        public IEnumerator RespawnWithDelay(Plane plane, float delay)
+        public IEnumerator RespawnWithDelay(NetworkedPlaneController plane, float delay)
         {
             yield return new WaitForSeconds(delay);
             plane.Respawn();

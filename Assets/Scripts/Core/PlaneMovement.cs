@@ -5,6 +5,8 @@ namespace Core
 {
     public class PlaneMovement : MonoBehaviour
     {
+        public event Action TookOff;
+        
         [SerializeField]
         private Rigidbody2D rigidbody2D;
 
@@ -30,6 +32,8 @@ namespace Core
         private FlightModifier currentFlightModifier;
 
         private bool isFacingRight;
+
+        private bool didTookOff;
         
         private void Awake()
         {
@@ -61,11 +65,26 @@ namespace Core
                 ApplyForces();
             }
         }
-        
+
+        public void DisableMovement()
+        {
+            rigidbody2D.velocity = Vector2.zero;
+            rigidbody2D.isKinematic = true;
+        }
+
+        public void EnableMovement()
+        {
+            rigidbody2D.isKinematic = false;
+        }
+
         private void ChangeEngineEnabled()
         {
             if (Input.GetKey(KeyCode.W)) {
                 isEngineOn = true;
+                if (!didTookOff) {
+                    didTookOff = true;
+                    TookOff?.Invoke();
+                }
             }
             if (Input.GetKey(KeyCode.S)) {
                 isEngineOn = false;

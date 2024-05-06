@@ -134,7 +134,7 @@ public class Plane : NetworkBehaviour
         Debug.Log($"{name}: collided with {collision2D.collider.name}");
     }
 
-    private void OnHealthChanged(int previous, int current)
+    private void OnHealthChanged(int current)
     {
         UpdateParticlesState();
     }

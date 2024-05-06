@@ -1,29 +1,32 @@
 ﻿using Unity.Netcode;
 using UnityEngine;
 
-public class Weapon : NetworkBehaviour
+public class PlaneWeapon : NetworkBehaviour
 {
-    [SerializeField]
-    private Rigidbody2D rigidbody2D;
-
     [SerializeField]
     private Bullet bulletPrefab;
 
     [SerializeField]
     private float fireCooldown;
 
+    [SerializeField]
+    private float bulletSpawnDistance = 1.3f;
+
     private float lastFireTime;
 
     private void Update()
     {
-        if (!IsOwner) {
-            return;
-        }
-        
-        CheckFire();
+        ProcessFire();
     }
 
-    private void CheckFire()
+    public override void OnNetworkSpawn()
+    {
+        if (!IsOwner) {
+            enabled = false;
+        }
+    }
+
+    private void ProcessFire()
     {
         if (lastFireTime + fireCooldown > Time.time) {
             return;
@@ -42,8 +45,8 @@ public class Weapon : NetworkBehaviour
     private void FireRpc()
     {
         var bullet = NetworkObjectPool.Singleton.GetNetworkObject(bulletPrefab.gameObject).GetComponent<Bullet>();
-        bullet.Init(transform.position + transform.right, transform.rotation);
-        bullet.GetComponent<NetworkObject>().Spawn(true);
-        bullet.SetVelocityRpc((Vector2)transform.right * 15f);
+        
+        bullet.GetComponent<NetworkObject>().SpawnWithOwnership(OwnerClientId, true);
+        bullet.Init(transform.position + transform.right * bulletSpawnDistance, transform.rotation);
     }
 }

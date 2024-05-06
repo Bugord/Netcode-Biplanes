@@ -5,17 +5,26 @@ using UnityEngine;
 public class Health : NetworkBehaviour
 {
     public event Action Died;
-    public event Action<int, int> HealthChanged;
+    public event Action<int> HealthChanged;
 
     [SerializeField]
     private int maxHealthpoints;
 
     public int CurrentHealth => healthpoints.Value;
 
-    private readonly NetworkVariable<int> healthpoints = new NetworkVariable<int>();
+    private NetworkVariable<int> healthpoints;
+
+    private void Awake()
+    {
+        healthpoints = new NetworkVariable<int>(maxHealthpoints);
+    }
 
     public override void OnNetworkSpawn()
     {
+        if (!IsOwner) {
+            enabled = false;
+        }
+        
         healthpoints.OnValueChanged += OnHealthChanged;
     }
 
@@ -35,7 +44,11 @@ public class Health : NetworkBehaviour
 
     private void OnHealthChanged(int previous, int current)
     {
-        HealthChanged?.Invoke(previous, current);
+        HealthChanged?.Invoke(current);
+
+        if (current == 0) {
+            Died?.Invoke();
+        }
     }
 
     public void TakeDamage()
@@ -45,9 +58,5 @@ public class Health : NetworkBehaviour
         }
 
         healthpoints.Value -= 1;
-        
-        if (healthpoints.Value == 0) {
-            Died?.Invoke();
-        }
     }
 }
