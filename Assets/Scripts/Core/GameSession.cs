@@ -45,7 +45,7 @@ namespace Core
                 
                 var plane = Instantiate(planePrefab, spawnPosition, Quaternion.identity);
                 var networkedPlaneController = plane.GetComponent<NetworkedPlaneController>();
-                networkedPlaneController.Init(team, spawnPosition);
+                networkedPlaneController.Init(team, spawnPosition, edgeDistance);
                 
                 plane.GetComponent<NetworkObject>().SpawnAsPlayerObject(playerData.ClientID);
 

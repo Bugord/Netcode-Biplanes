@@ -189,7 +189,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d5a57f767e5e46a458fc5d3c628d0cbb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  GlobalObjectIdHash: 1817892110
+  GlobalObjectIdHash: 862664922
   InScenePlacedSourceGlobalObjectIdHash: 0
   AlwaysReplicateAsRoot: 0
   SynchronizeTransform: 1
@@ -254,8 +254,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   health: {fileID: 5304711510785712308}
-  planeSpriteController: {fileID: 3779647886779789308}
-  networkTransform: {fileID: 7451329571336271441}
+  clientPlaneController: {fileID: 5496406484389376103}
 --- !u!114 &5496406484389376103
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -326,6 +325,7 @@ MonoBehaviour:
   rigidbody2D: {fileID: 7761591406434232365}
   networkedPlaneController: {fileID: 5220322714833663955}
   planeRotation: {fileID: 1017221826989820144}
+  clientNetworkTransform: {fileID: 7451329571336271441}
   planeFlightModifiersData: {fileID: 11400000, guid: 06f23816c69778d4a9677c615a519690, type: 2}
   engineBaseForce: 9
   liftBaseForce: 9.81

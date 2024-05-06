@@ -1,8 +1,6 @@
 ﻿using System;
-using Unity.Mathematics;
 using Unity.Multiplayer.Samples.Utilities;
 using Unity.Netcode;
-using Unity.Netcode.Components;
 using UnityEngine;
 
 namespace Core
@@ -15,23 +13,25 @@ namespace Core
         private Health health;
 
         [SerializeField]
-        private PlaneSpriteController planeSpriteController;
+        private ClientPlaneController clientPlaneController;
 
-        [SerializeField]
-        private NetworkTransform networkTransform;
-        
         private readonly NetworkVariable<Team> team = new NetworkVariable<Team>();
+
+        private readonly NetworkVariable<float> edgeDistance = new NetworkVariable<float>();
+
+        private readonly NetworkVariable<Vector3> spawnPosition = new NetworkVariable<Vector3>();
 
         private readonly Vector3 mirroredPlayerRotation = new Vector3(0, 180, 0);
 
-        private Vector3 spawnPosition;
-        
         public Team Team => team.Value;
+        public float EdgeDistance => edgeDistance.Value;
+        public Vector3 SpawnPosition => spawnPosition.Value;
 
-        public void Init(Team team, Vector3 spawnPosition)
+        public void Init(Team team, Vector3 spawnPosition, float edgeDistance)
         {
             this.team.Value = team;
-            this.spawnPosition = spawnPosition;
+            this.spawnPosition.Value = spawnPosition;
+            this.edgeDistance.Value = edgeDistance;
         }
 
         private void OnEnable()
@@ -54,22 +54,20 @@ namespace Core
         public override void OnNetworkSpawn()
         {
             base.OnNetworkSpawn();
-            
+
             SetDefaultRotation();
         }
 
         public void Respawn()
         {
             health.Reset();
-            planeSpriteController.SetDefaultSpriteRpc();
-            MoveToPositionRpc(spawnPosition);
+            RepawnRpc();
         }
 
         [Rpc(SendTo.Owner)]
-        private void MoveToPositionRpc(Vector3 position)
+        private void RepawnRpc()
         {
-            networkTransform.Teleport(position, quaternion.identity, Vector3.one);
-            SetDefaultRotation();
+            clientPlaneController.Respawn();
         }
 
         private void SetDefaultRotation()

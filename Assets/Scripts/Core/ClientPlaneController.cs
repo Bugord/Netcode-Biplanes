@@ -1,4 +1,6 @@
-﻿using UnityEngine;
+﻿using System;
+using Unity.Multiplayer.Samples.Utilities.ClientAuthority;
+using UnityEngine;
 
 namespace Core
 {
@@ -19,7 +21,7 @@ namespace Core
 
         [SerializeField]
         private PlaneMovement planeMovement;
-
+        
         private void Awake()
         {
             networkedPlaneController.OnNetworkSpawnHook += OnNetworkSpawn;
@@ -34,15 +36,22 @@ namespace Core
             planeMovement.TookOff -= OnPlaneTookOff;
         }
 
-        private void OnPlaneCrashed()
+        public void Respawn()
         {
-            planeSpriteController.SetDestroyedSpriteRpc();
-            planeMovement.DisableMovement();
+            planeMovement.Teleport(networkedPlaneController.SpawnPosition);
+            planeSpriteController.SetDefaultSprite();
+            planeMovement.EnableMovement();
         }
         
+        private void OnPlaneCrashed()
+        {
+            planeSpriteController.SetDestroyedSprite();
+            planeMovement.DisableMovement();
+        }
+
         private void OnPlaneTookOff()
         {
-            planeSpriteController.SetFlySpriteRpc();
+            planeSpriteController.SetFlySprite();
         }
 
         private void OnNetworkSpawn()
@@ -50,8 +59,8 @@ namespace Core
             var isMirrored = networkedPlaneController.Team == Team.Red;
             planeRotation.Init(isMirrored);
             planeSpriteController.Init(networkedPlaneController.Team);
-            
-            planeSpriteController.SetDefaultSpriteRpc();
+
+            planeSpriteController.SetDefaultSprite();
         }
     }
 }

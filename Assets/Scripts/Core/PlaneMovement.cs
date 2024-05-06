@@ -1,4 +1,5 @@
 ﻿using System;
+using Unity.Multiplayer.Samples.Utilities.ClientAuthority;
 using UnityEngine;
 
 namespace Core
@@ -6,7 +7,7 @@ namespace Core
     public class PlaneMovement : MonoBehaviour
     {
         public event Action TookOff;
-        
+
         [SerializeField]
         private Rigidbody2D rigidbody2D;
 
@@ -15,6 +16,9 @@ namespace Core
 
         [SerializeField]
         private PlaneRotation planeRotation;
+
+        [SerializeField]
+        private ClientNetworkTransform clientNetworkTransform;
 
         [SerializeField]
         private PlaneFlightModifiersData planeFlightModifiersData;
@@ -34,7 +38,9 @@ namespace Core
         private bool isFacingRight;
 
         private bool didTookOff;
-        
+       
+        private float EdgeDistance => networkedPlaneController.EdgeDistance;
+
         private void Awake()
         {
             networkedPlaneController.OnNetworkSpawnHook += OnNetworkSpawn;
@@ -57,13 +63,24 @@ namespace Core
         private void Update()
         {
             ChangeEngineEnabled();
-        }
 
+            if (Mathf.Abs(transform.position.x) < EdgeDistance) {
+                return;
+            }
+
+            MoveToOtherSide();
+        }
+        
         private void FixedUpdate()
         {
             if (isEngineOn) {
                 ApplyForces();
             }
+        }
+
+        public void Teleport(Vector3 position)
+        {
+            clientNetworkTransform.Teleport(position, transform.rotation, transform.localScale);
         }
 
         public void DisableMovement()
@@ -111,12 +128,21 @@ namespace Core
             if (!isFacingRight) {
                 engineForce = new Vector2(-engineForce.x, engineForce.y);
             }
-            
+
             rigidbody2D.AddForce(engineForce + liftForce);
 
             if (rigidbody2D.velocity.magnitude > maxSpeed) {
                 rigidbody2D.velocity = rigidbody2D.velocity.normalized * maxSpeed;
             }
+        }
+        
+        private void MoveToOtherSide()
+        {
+            var playerPos = transform.position;
+            clientNetworkTransform.Teleport(
+                new Vector3(playerPos.x > 0 ? -EdgeDistance : EdgeDistance, playerPos.y),
+                transform.rotation,
+                Vector3.one);
         }
     }
 }
