@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using UnityEngine;
-using UnityEngine.U2D.Animation;
+﻿using UnityEngine;
 
 namespace Core
 {
@@ -11,7 +8,8 @@ namespace Core
         [SerializeField]
         private NetworkedPlaneController networkedPlaneController;
 
-        private bool isEngineOn;
+        [SerializeField]
+        private PlaneRotation planeRotation;
 
         private void Awake()
         {
@@ -25,24 +23,8 @@ namespace Core
 
         private void OnNetworkSpawn()
         {
-            if (!networkedPlaneController.IsOwner) {
-                enabled = false;
-            }
-        }
-
-        private void Update()
-        {
-            ChangeEngineEnabled();
-        }
-
-        private void ChangeEngineEnabled()
-        {
-            if (Input.GetKey(KeyCode.W)) {
-                isEngineOn = true;
-            }
-            if (Input.GetKey(KeyCode.S)) {
-                isEngineOn = false;
-            }
+            var isMirrored = networkedPlaneController.Team == Team.Red;
+            planeRotation.Init(isMirrored);            
         }
     }
 }

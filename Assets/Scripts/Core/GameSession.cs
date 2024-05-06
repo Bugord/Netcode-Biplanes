@@ -41,7 +41,8 @@ namespace Core
             for (var i = 0; i < SessionManager.PlayersDataList.Count; i++) {
                 var playerData = SessionManager.PlayersDataList[i];
                 var plane = Instantiate(planePrefab, i == 0 ? serverSpawnPoint.position : clientSpawnPoint.position, Quaternion.identity);
-                plane.GetComponent<NetworkObject>().SpawnWithOwnership(playerData.ClientID);
+                plane.GetComponent<NetworkedPlaneController>().Init(i == 0 ? Team.Blue : Team.Red);
+                plane.GetComponent<NetworkObject>().SpawnAsPlayerObject(playerData.ClientID);
             }
         }
 

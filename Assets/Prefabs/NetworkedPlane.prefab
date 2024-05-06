@@ -13,11 +13,13 @@ GameObject:
   - component: {fileID: 7761591406434232365}
   - component: {fileID: 837693105913251209}
   - component: {fileID: 6240412887512437067}
+  - component: {fileID: 7451329571336271441}
+  - component: {fileID: 5580742105950398344}
   - component: {fileID: 5220322714833663955}
-  - component: {fileID: 4880856062381633807}
   - component: {fileID: 5496406484389376103}
   - component: {fileID: 3059844241354429864}
   - component: {fileID: 1017221826989820144}
+  - component: {fileID: 5461207984092915866}
   m_Layer: 0
   m_Name: NetworkedPlane
   m_TagString: Untagged
@@ -108,8 +110,8 @@ Rigidbody2D:
   m_UseFullKinematicContacts: 0
   m_UseAutoMass: 0
   m_Mass: 1
-  m_LinearDrag: 0
-  m_AngularDrag: 0.05
+  m_LinearDrag: 1
+  m_AngularDrag: 1
   m_GravityScale: 1
   m_Material: {fileID: 0}
   m_IncludeLayers:
@@ -189,6 +191,49 @@ MonoBehaviour:
   SpawnWithObservers: 1
   DontDestroyWithOwner: 0
   AutoObjectParentSync: 1
+--- !u!114 &7451329571336271441
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 504027045366491281}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: df2868252ab5c4d1da357e8f11f1b524, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  UseUnreliableDeltas: 0
+  SyncPositionX: 1
+  SyncPositionY: 1
+  SyncPositionZ: 0
+  SyncRotAngleX: 0
+  SyncRotAngleY: 0
+  SyncRotAngleZ: 0
+  SyncScaleX: 0
+  SyncScaleY: 0
+  SyncScaleZ: 0
+  PositionThreshold: 0.001
+  RotAngleThreshold: 0.01
+  ScaleThreshold: 0.01
+  UseQuaternionSynchronization: 0
+  UseQuaternionCompression: 0
+  UseHalfFloatPrecision: 0
+  InLocalSpace: 0
+  Interpolate: 1
+  SlerpPosition: 0
+--- !u!114 &5580742105950398344
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 504027045366491281}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 75848431706e469ca6341f9a30889db4, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!114 &5220322714833663955
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -199,18 +244,6 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 7d0f47d153bc45f990b7add5dcd04c44, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
---- !u!114 &4880856062381633807
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 504027045366491281}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 9333dae608134c0f81c3cd73319ab029, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
 --- !u!114 &5496406484389376103
@@ -226,6 +259,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   networkedPlaneController: {fileID: 5220322714833663955}
+  planeRotation: {fileID: 1017221826989820144}
+  planeMovement: {fileID: 5461207984092915866}
 --- !u!1652712579 &3059844241354429864
 MultiplayerRolesData:
   m_ObjectHideFlags: 2
@@ -235,16 +270,22 @@ MultiplayerRolesData:
   m_GameObject: {fileID: 504027045366491281}
   m_GameObjectRolesMask: 3
   m_ComponentsRolesMasks:
-  - m_Object: {fileID: 4880856062381633807}
+  - m_Object: {fileID: 0}
     m_RolesMask: 2
   - m_Object: {fileID: 5496406484389376103}
     m_RolesMask: 1
   - m_Object: {fileID: 7761591406434232365}
-    m_RolesMask: 1
+    m_RolesMask: 3
   - m_Object: {fileID: 837693105913251209}
     m_RolesMask: 3
   - m_Object: {fileID: 1017221826989820144}
     m_RolesMask: 3
+  - m_Object: {fileID: 7451329571336271441}
+    m_RolesMask: 3
+  - m_Object: {fileID: 0}
+    m_RolesMask: 3
+  - m_Object: {fileID: 5461207984092915866}
+    m_RolesMask: 1
 --- !u!114 &1017221826989820144
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -258,3 +299,22 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   rorationCooldown: 0.1
+--- !u!114 &5461207984092915866
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 504027045366491281}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3c11a7e1d62d4223a04d273fb55a5048, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  rigidbody2D: {fileID: 7761591406434232365}
+  networkedPlaneController: {fileID: 5220322714833663955}
+  planeRotation: {fileID: 1017221826989820144}
+  planeFlightModifiersData: {fileID: 11400000, guid: 06f23816c69778d4a9677c615a519690, type: 2}
+  engineBaseForce: 9
+  liftBaseForce: 9.81
+  maxSpeed: 10

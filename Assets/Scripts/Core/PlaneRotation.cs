@@ -1,10 +1,13 @@
-﻿using Unity.Netcode;
+﻿using System;
+using Unity.Netcode;
 using UnityEngine;
 
 namespace Core
 {
-    public class ClientPlaneRotation : NetworkBehaviour
+    public class PlaneRotation : NetworkBehaviour
     {
+        public event Action<float> AngleChanged; 
+
         [SerializeField]
         private float rorationCooldown = 0.1f;
 
@@ -14,6 +17,8 @@ namespace Core
 
         private float lastRotationTime;
         private float angleDelta;
+
+        private bool isMirrored;
 
         private void Awake()
         {
@@ -41,6 +46,11 @@ namespace Core
             ProcessAngleChange();
         }
 
+        public void Init(bool isMirrored)
+        {
+            this.isMirrored = isMirrored;
+        }
+
         private void ProcessAngleChange()
         {
             if (lastRotationTime + rorationCooldown > Time.time) {
@@ -50,6 +60,11 @@ namespace Core
             lastRotationTime = Time.time;
 
             var indexChange = GetIndexChange();
+
+            if (isMirrored) {
+                indexChange *= -1;
+            }
+            
             ChangeAngleIndex(indexChange);
         }
 
@@ -93,11 +108,13 @@ namespace Core
         {
             var angle = GetEulerAngle();
             RotateToAngle(angle);
+            
+            AngleChanged?.Invoke(angle);
         }
 
         private float GetEulerAngle()
         {
-            var angle = 0f - currentAngleIndex.Value * angleDelta;
+            var angle = 360f - currentAngleIndex.Value * angleDelta;
             if (angle >= 360f) {
                 angle -= 360f;
             }
@@ -107,7 +124,9 @@ namespace Core
 
         private void RotateToAngle(float angle)
         {
-            transform.rotation = Quaternion.Euler(0, 0, angle);
+            Debug.Log($"Rotating to {angle}");
+            var cachedRotation = transform.rotation.eulerAngles;
+            transform.rotation = Quaternion.Euler(cachedRotation.x, cachedRotation.y, angle); 
         }
     }
 }

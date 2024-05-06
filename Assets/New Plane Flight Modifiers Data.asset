@@ -1,0 +1,52 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: cc0ea9b7169c49c5ae8356d89d9dba63, type: 3}
+  m_Name: New Plane Flight Modifiers Data
+  m_EditorClassIdentifier: 
+  engineForceModifiers:
+    _serializedList:
+    - Key: 0
+      Value:
+        engineModifier: {x: 1, y: 0}
+        liftModifier: {x: 0, y: 1}
+    - Key: 22.5
+      Value:
+        engineModifier: {x: 0.9, y: 0.2}
+        liftModifier: {x: 0, y: 1.2}
+    - Key: 45
+      Value:
+        engineModifier: {x: 0.7, y: 0.7}
+        liftModifier: {x: 0, y: 1.4}
+    - Key: 67.5
+      Value:
+        engineModifier: {x: 0.2, y: 0.9}
+        liftModifier: {x: 0, y: 0.5}
+    - Key: 90
+      Value:
+        engineModifier: {x: 0, y: 1}
+        liftModifier: {x: 0, y: 0}
+    - Key: 270
+      Value:
+        engineModifier: {x: 0, y: -1}
+        liftModifier: {x: 0, y: 0}
+    - Key: 292.5
+      Value:
+        engineModifier: {x: 0.2, y: -0.9}
+        liftModifier: {x: 0, y: 0.1}
+    - Key: 315
+      Value:
+        engineModifier: {x: 0.7, y: -0.7}
+        liftModifier: {x: 0, y: 0.3}
+    - Key: 337.5
+      Value:
+        engineModifier: {x: 0.9, y: -0.2}
+        liftModifier: {x: 0, y: 0.5}

@@ -40,8 +40,6 @@ public class PlaneControl : NetworkBehaviour
     private void Update()
     {
         ChangeEngineEnabled();
-        ChangeDirection();
-        RotateSprite();
         SetModifiers();
         DrawDebugLines();
     }
@@ -87,7 +85,6 @@ public class PlaneControl : NetworkBehaviour
             transform.localScale = new Vector3(1, -1, 1);
         }
         
-        RotateSprite();
         IsTakenOff = false;
     }
 
@@ -100,66 +97,7 @@ public class PlaneControl : NetworkBehaviour
             isEngineEnabled = false;
         }
     }
-
-    private void ChangeDirection()
-    {
-        if (!IsOwner) {
-            return;
-        }
-
-        if (!isEngineEnabled) {
-            return;
-        }
-
-        var moveLeft = Input.GetKey(KeyCode.A);
-        var moveRight = Input.GetKey(KeyCode.D);
-
-        if (lastRotationTime + rorationCooldown > Time.time) {
-            return;
-        }
-
-        if (!moveLeft && !moveRight) {
-            return;
-        }
-
-        lastRotationTime = Time.time;
-
-        var currentIndex = anglesList.IndexOf(currentAngle);
-        if (moveLeft) {
-            if (currentIndex == 0) {
-                isRight = false;
-            }
-            if (currentIndex == anglesList.Count - 1) {
-                isRight = true;
-            }
-
-            currentIndex = isRight
-                ? Mathf.Max(currentIndex - 1, 0)
-                : Mathf.Min(currentIndex + 1, anglesList.Count - 1);
-        }
-
-        if (moveRight) {
-            if (currentIndex == anglesList.Count - 1) {
-                isRight = false;
-            }
-            if (currentIndex == 0) {
-                isRight = true;
-            }
-
-            currentIndex = isRight
-                ? Mathf.Min(currentIndex + 1, anglesList.Count - 1)
-                : Mathf.Max(currentIndex - 1, 0);
-        }
-
-        currentAngle = anglesList[currentIndex];
-    }
-
-    private void RotateSprite()
-    {
-        transform.rotation =
-            isRight ? Quaternion.Euler(0, 0, 90 - GetRotataion()) : Quaternion.Euler(0, 0, GetRotataion() + 90);
-    }
-
+    
     private void SetModifiers()
     {
         engine = planeData.engineForceModifiers[currentAngle] * planeData.engineForce;
