@@ -24,6 +24,9 @@ namespace Core
 
         [SerializeField]
         private PlaneParticles planeParticles;
+
+        [SerializeField]
+        private PlaneWeapon planeWeapon;
         
         private void Awake()
         {
@@ -66,6 +69,7 @@ namespace Core
             planeMovement.EnableMovement();
             planeParticles.Reset();
             planeRotation.Reset();
+            planeWeapon.enabled = true;
         }
         
         public void OnPlaneCrashed()
@@ -75,6 +79,7 @@ namespace Core
             planeSpriteController.SetDestroyedSprite();
             planeMovement.DisableMovement();
             planeRotation.DisableRotation();
+            planeWeapon.enabled = false;
         }
 
         private void OnPlaneEngineStarted()
@@ -94,6 +99,7 @@ namespace Core
 
         private void OnHealthChanged(int health)
         {
+            Debug.Log($"{networkedPlaneController.Team} health changed {health}");
             switch (health) {
                 case 2: 
                     planeParticles.SmokeSetActive(true);

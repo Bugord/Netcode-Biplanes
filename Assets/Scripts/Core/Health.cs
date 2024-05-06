@@ -21,10 +21,6 @@ public class Health : NetworkBehaviour
 
     public override void OnNetworkSpawn()
     {
-        if (!IsOwner) {
-            enabled = false;
-        }
-        
         healthpoints.OnValueChanged += OnHealthChanged;
     }
 

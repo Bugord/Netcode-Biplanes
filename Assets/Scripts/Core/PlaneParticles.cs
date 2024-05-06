@@ -1,44 +1,54 @@
 ﻿using UnityEngine;
+using UnityEngine.Serialization;
 
 namespace Core
 {
     public class PlaneParticles : MonoBehaviour
     {
         [SerializeField]
-        private GameObject smokeParticles;
+        private ParticleSystem smokeParticles;
 
         [SerializeField]
-        private GameObject fireParticles;
+        private ParticleSystem fireParticles;
 
         [SerializeField]
-        private GameObject explosion;
+        private Animator explosionAnimator;
 
         public void Reset()
         {
-            smokeParticles.SetActive(false);
-            fireParticles.SetActive(false);
-            explosion.SetActive(false);
+            smokeParticles.Stop();
+            fireParticles.Stop();
         }
 
         public void DisableDamageEffects()
         {
-            smokeParticles.SetActive(false);
-            fireParticles.SetActive(false);
+            smokeParticles.Stop();
+            fireParticles.Stop();
         }
 
         public void PlayExplosion()
         {
-            explosion.SetActive(true);
+            explosionAnimator.Play("explosion_animation");
         }
 
         public void SmokeSetActive(bool isActive)
         {
-            smokeParticles.SetActive(isActive);
+            if (isActive) {
+                smokeParticles.Play();
+            }
+            else {
+                smokeParticles.Stop();
+            }
         }
 
         public void FireSetActive(bool isActive)
         {
-            smokeParticles.SetActive(isActive);
+            if (isActive) {
+                fireParticles.Play();
+            }
+            else {
+                fireParticles.Stop();
+            }
         }
     }
 }

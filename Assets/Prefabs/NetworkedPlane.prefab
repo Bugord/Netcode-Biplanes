@@ -273,6 +273,7 @@ MonoBehaviour:
   health: {fileID: 5304711510785712308}
   planeMovement: {fileID: 5461207984092915866}
   planeParticles: {fileID: 8233085328630137065}
+  planeWeapon: {fileID: 8455352071101638119}
 --- !u!1652712579 &3059844241354429864
 MultiplayerRolesData:
   m_ObjectHideFlags: 2
@@ -371,9 +372,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: bbe8068180a64ad29a1ba18b6cf72a50, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  smokeParticles: {fileID: 5230151710775994807}
-  fireParticles: {fileID: 3363457435959431568}
-  explosion: {fileID: 8052094535886226786}
+  smokeParticles: {fileID: 4433927716599157314}
+  fireParticles: {fileID: 3387741873293571653}
+  explosionAnimator: {fileID: 709969604581076051}
 --- !u!114 &3779647886779789308
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -408,7 +409,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!4 &5312586188909180746
 Transform:
   m_ObjectHideFlags: 0
@@ -518,7 +519,7 @@ ParticleSystem:
   emitterVelocityMode: 1
   looping: 1
   prewarm: 0
-  playOnAwake: 1
+  playOnAwake: 0
   useUnscaledTime: 0
   autoRandomSeed: 1
   startDelay:
@@ -5243,7 +5244,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!4 &6641790245947673763
 Transform:
   m_ObjectHideFlags: 0
@@ -5353,7 +5354,7 @@ ParticleSystem:
   emitterVelocityMode: 1
   looping: 1
   prewarm: 0
-  playOnAwake: 1
+  playOnAwake: 0
   useUnscaledTime: 0
   autoRandomSeed: 1
   startDelay:
@@ -10073,14 +10074,14 @@ GameObject:
   m_Component:
   - component: {fileID: 2332668088046085826}
   - component: {fileID: 5110766265360151745}
-  - component: {fileID: 2474179881659401775}
+  - component: {fileID: 709969604581076051}
   m_Layer: 7
   m_Name: Explosion
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!4 &2332668088046085826
 Transform:
   m_ObjectHideFlags: 0
@@ -10140,7 +10141,7 @@ SpriteRenderer:
   m_SortingLayerID: 1564564777
   m_SortingLayer: 2
   m_SortingOrder: 1
-  m_Sprite: {fileID: -8092295105046505211, guid: 515a89b425caa8e4d9c23d68af40fa3a, type: 3}
+  m_Sprite: {fileID: 0}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0
@@ -10148,10 +10149,10 @@ SpriteRenderer:
   m_Size: {x: 3, y: 3}
   m_AdaptiveModeThreshold: 0.5
   m_SpriteTileMode: 0
-  m_WasSpriteAssigned: 1
+  m_WasSpriteAssigned: 0
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
---- !u!95 &2474179881659401775
+--- !u!95 &709969604581076051
 Animator:
   serializedVersion: 7
   m_ObjectHideFlags: 0
