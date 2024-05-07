@@ -12,6 +12,9 @@ namespace Core
         private NetworkedPlaneController networkedPlaneController;
 
         [SerializeField]
+        private PlanePilotEjectController planePilotEjectController;
+
+        [SerializeField]
         private PlaneRotation planeRotation;
 
         [SerializeField]
@@ -28,13 +31,15 @@ namespace Core
 
         [SerializeField]
         private PlaneWeapon planeWeapon;
-        
+
         private void Awake()
         {
             networkedPlaneController.OnNetworkSpawnHook += OnNetworkSpawn;
             health.HealthEmpty += OnPlaneCrashed;
             health.HealthChanged += OnHealthChanged;
             planeMovement.EngineStarted += OnPlaneEngineStarted;
+            planeMovement.TookOff += OnPlaneTookOff;
+            planePilotEjectController.PilotEjected += OnPilotEjected;
         }
 
         private void OnDestroy()
@@ -43,6 +48,8 @@ namespace Core
             health.HealthEmpty -= OnPlaneCrashed;
             health.HealthChanged -= OnHealthChanged;
             planeMovement.EngineStarted -= OnPlaneEngineStarted;
+            planeMovement.TookOff -= OnPlaneTookOff;
+            planePilotEjectController.PilotEjected -= OnPilotEjected;
         }
 
         private void OnCollisionEnter2D(Collision2D col)
@@ -50,11 +57,11 @@ namespace Core
             if (!networkedPlaneController.IsOwner) {
                 return;
             }
-            
+
             if (!planeMovement.WasEngineStarted) {
                 return;
             }
-            
+
             if (col.gameObject.CompareTag("Ground") && planeMovement.DidTookOff) {
                 networkedPlaneController.OnPlaneCrashed();
                 OnPlaneCrashed();
@@ -66,26 +73,57 @@ namespace Core
             }
         }
 
+        private void OnNetworkSpawn()
+        {
+            var isMirrored = networkedPlaneController.Team == Team.Red;
+            planeRotation.Init(isMirrored);
+            planeSpriteController.Init(networkedPlaneController.Team);
+
+            if (networkedPlaneController.IsOwner) {
+                Respawn();
+            }
+        }
+
         public void Respawn()
         {
+            planePilotEjectController.Reset();
+            planePilotEjectController.DisableEjection();
+
             planeMovement.Reset();
             planeMovement.Teleport(networkedPlaneController.SpawnPosition);
-            planeSpriteController.SetDefaultSprite();
             planeMovement.EnableMovement();
+            planeMovement.EnableInput();
+
+            planeSpriteController.SetDefaultSprite();
+
             planeParticles.Reset();
             planeRotation.Reset();
             planeWeapon.enabled = true;
         }
-        
+
+        private void OnPlaneEngineStarted()
+        {
+            planePilotEjectController.EnableEjection();
+            planeSpriteController.SetFlySprite();
+            planeRotation.EnableRotationUp();
+            planeMovement.DisableInput();
+        }
+
+        private void OnPlaneTookOff()
+        {
+            planeRotation.EnableRotationDown();
+            planeMovement.EnableInput();
+        }
+
         public void OnPlaneCrashed()
         {
-            networkedPlaneController.PlayCrashedGraphicsRpc();   
+            planePilotEjectController.DisableEjection();
+            networkedPlaneController.PlayCrashedGraphicsRpc();
             planeMovement.DisableMovement();
             planeRotation.DisableRotation();
             planeWeapon.enabled = false;
         }
 
-        [Rpc(SendTo.ClientsAndHost)]
         public void PlayCrashedGraphics()
         {
             planeParticles.DisableDamageEffects();
@@ -93,32 +131,26 @@ namespace Core
             planeSpriteController.SetDestroyedSprite();
         }
 
-        private void OnPlaneEngineStarted()
-        {
-            planeSpriteController.SetFlySprite();
-            planeRotation.EnableRotation();
-        }
-
-        private void OnNetworkSpawn()
-        {
-            var isMirrored = networkedPlaneController.Team == Team.Red;
-            planeRotation.Init(isMirrored);
-            planeSpriteController.Init(networkedPlaneController.Team);
-
-            planeSpriteController.SetDefaultSprite();
-        }
-
         private void OnHealthChanged(int health)
         {
             Debug.Log($"{networkedPlaneController.Team} health changed {health}");
             switch (health) {
-                case 2: 
+                case 2:
                     planeParticles.SmokeSetActive(true);
                     break;
                 case 1:
                     planeParticles.SmokeSetActive(false);
                     planeParticles.FireSetActive(true);
                     break;
+            }
+        }
+
+        private void OnPilotEjected()
+        {
+            planeRotation.DisableRotation();
+            planeMovement.DisableInput();
+            if (planeMovement.DidTookOff) {
+                planeMovement.DisableEngine();
             }
         }
     }

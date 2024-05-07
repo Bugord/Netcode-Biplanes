@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using Network;
+using Pilot;
 using ScoreUI;
 using Unity.Netcode;
 using UnityEngine;
@@ -54,17 +55,28 @@ namespace Core
                 plane.GetComponent<NetworkObject>().SpawnAsPlayerObject(playerData.ClientID);
 
                 networkedPlaneController.Crashed += OnPlaneCrash;
+                networkedPlaneController.EnteredRespawnArea += OnPilotEnteredRespawnArea;
             }
+        }
+
+        private void OnPilotEnteredRespawnArea(NetworkedPlaneController plane)
+        {
+            Debug.Log($"[{nameof(GameSession)}] Plane respawned: {plane.Team}");
+            plane.Respawn();
         }
 
         private void OnPlaneCrash(NetworkedPlaneController plane, PlaneCrashReason reason)
         {
+            Debug.Log($"[{nameof(GameSession)}] Plane crashed: {plane.Team} {reason}");
             switch (reason) {
-                case PlaneCrashReason.Destroyed:
+                case PlaneCrashReason.PlaneDestroyed:
                     ChangeScore(plane.Team == Team.Red ? Team.Blue : Team.Red, 1);
                     break;
                 case PlaneCrashReason.Suicide:
                     ChangeScore(plane.Team, -1);
+                    break;
+                case PlaneCrashReason.PilotShot:
+                    ChangeScore(plane.Team == Team.Red ? Team.Blue : Team.Red, 2);
                     break;
             }
             
@@ -79,13 +91,12 @@ namespace Core
 
             teamsScore[Team.Red] = Mathf.Max(teamsScore[Team.Red], 0);
             teamsScore[Team.Blue] = Mathf.Max(teamsScore[Team.Blue], 0);
-
-            Debug.Log($"Red:Blue {teamsScore[Team.Red]}:{teamsScore[Team.Blue]}");
         }
         
         public IEnumerator RespawnWithDelay(NetworkedPlaneController plane, float delay)
         {
             yield return new WaitForSeconds(delay);
+            Debug.Log($"[{nameof(GameSession)}] Plane respawn: {plane.Team}");
             plane.Respawn();
         }
     }

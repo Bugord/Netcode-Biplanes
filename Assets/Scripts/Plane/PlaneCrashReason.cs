@@ -3,6 +3,7 @@
     public enum PlaneCrashReason
     {
         Suicide,
-        Destroyed
+        PlaneDestroyed,
+        PilotShot
     }
 }

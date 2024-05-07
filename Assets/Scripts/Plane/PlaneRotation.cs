@@ -6,20 +6,22 @@ namespace Core
 {
     public class PlaneRotation : NetworkBehaviour
     {
-        public event Action<float> AngleChanged; 
+        public event Action<float> AngleChanged;
 
         [SerializeField]
         private float rorationCooldown = 0.1f;
 
         private const int AngleCount = 16;
 
-        private readonly NetworkVariable<int> currentAngleIndex = new NetworkVariable<int>(0, NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Owner);
+        private readonly NetworkVariable<int> currentAngleIndex = new NetworkVariable<int>(0,
+            NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Owner);
 
         private float lastRotationTime;
         private float angleDelta;
 
         private bool isMirrored;
         private bool isRotationEnabled;
+        private bool isRotatingDownDisabled;
 
         private void Awake()
         {
@@ -29,7 +31,7 @@ namespace Core
         public override void OnNetworkSpawn()
         {
             currentAngleIndex.OnValueChanged += OnCurrentAngleIndexChange;
-            
+
             UpdateRoration();
         }
 
@@ -60,15 +62,21 @@ namespace Core
         {
             currentAngleIndex.Value = 0;
         }
-        
-        public void EnableRotation()
+
+        public void EnableRotationUp()
         {
             isRotationEnabled = true;
+            isRotatingDownDisabled = true;
         }
 
         public void DisableRotation()
         {
             isRotationEnabled = false;
+        }
+
+        public void EnableRotationDown()
+        {
+            isRotatingDownDisabled = false;
         }
 
         private void ProcessAngleChange()
@@ -84,7 +92,11 @@ namespace Core
             if (isMirrored) {
                 indexChange *= -1;
             }
-            
+
+            if (isRotatingDownDisabled && indexChange == 1) {
+                indexChange = 0;
+            }
+
             ChangeAngleIndex(indexChange);
         }
 
@@ -128,7 +140,7 @@ namespace Core
         {
             var angle = GetEulerAngle();
             RotateToAngle(angle);
-            
+
             AngleChanged?.Invoke(angle);
         }
 
@@ -144,9 +156,8 @@ namespace Core
 
         private void RotateToAngle(float angle)
         {
-            Debug.Log($"Rotating to {angle}");
             var cachedRotation = transform.rotation.eulerAngles;
-            transform.rotation = Quaternion.Euler(cachedRotation.x, cachedRotation.y, angle); 
+            transform.rotation = Quaternion.Euler(cachedRotation.x, cachedRotation.y, angle);
         }
     }
 }

@@ -1,4 +1,5 @@
 ﻿using System;
+using Pilot;
 using Unity.Multiplayer.Samples.Utilities.ClientAuthority;
 using UnityEngine;
 
@@ -7,6 +8,7 @@ namespace Core
     public class PlaneMovement : MonoBehaviour
     {
         public event Action EngineStarted;
+        public event Action TookOff;
 
         [SerializeField]
         private Rigidbody2D rigidbody2D;
@@ -37,6 +39,8 @@ namespace Core
 
         private bool isFacingRight;
 
+        private bool isInputDisabled;
+
         public bool WasEngineStarted { get; private set; }
         public bool DidTookOff { get; private set; }
        
@@ -63,6 +67,10 @@ namespace Core
 
         private void Update()
         {
+            if (!networkedPlaneController.IsSpawned) {
+                return;
+            }
+            
             ChangeEngineEnabled();
 
             if (Mathf.Abs(transform.position.x) < EdgeDistance) {
@@ -89,7 +97,21 @@ namespace Core
             isEngineOn = false;
             WasEngineStarted = false;
             DidTookOff = false;
-            EnableMovement();
+        }
+
+        public void DisableInput()
+        {
+            isInputDisabled = true;
+        }
+
+        public void EnableInput()
+        {
+            isInputDisabled = false;
+        }
+
+        public void DisableEngine()
+        {
+            isEngineOn = false;
         }
 
         public void DisableMovement()
@@ -105,6 +127,10 @@ namespace Core
 
         private void ChangeEngineEnabled()
         {
+            if (isInputDisabled) {
+                return;
+            }
+            
             if (Input.GetKey(KeyCode.W)) {
                 isEngineOn = true;
                 if (!WasEngineStarted) {
@@ -121,8 +147,9 @@ namespace Core
         {
             UpdateModifiers(angle);
             
-            if (!DidTookOff) {
+            if (WasEngineStarted && !DidTookOff) {
                 DidTookOff = true;
+                TookOff?.Invoke();
             }
             isFacingRight = transform.right.x > 0;
         }
@@ -130,7 +157,6 @@ namespace Core
         private void UpdateModifiers(float angle)
         {
             currentFlightModifier = planeFlightModifiersData.GetModifiersForAngle(angle);
-            Debug.Log($"New modifiers: {currentFlightModifier.engineModifier} {currentFlightModifier.liftModifier}");
         }
 
         private void ApplyForces()

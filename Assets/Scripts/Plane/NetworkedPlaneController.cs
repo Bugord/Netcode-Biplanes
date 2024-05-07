@@ -8,9 +8,13 @@ namespace Core
     public class NetworkedPlaneController : NetcodeHooks
     {
         public event Action<NetworkedPlaneController, PlaneCrashReason> Crashed;
+        public event Action<NetworkedPlaneController> EnteredRespawnArea; 
 
         [SerializeField]
         private Health health;
+        
+        [SerializeField]
+        private PlanePilotEjectController planePilotEjectController;
 
         [SerializeField]
         private ClientPlaneController clientPlaneController;
@@ -49,15 +53,40 @@ namespace Core
             OnPlaneCrashedRpc();
         }
 
+        public void OnPilotDied(PlaneCrashReason crashReason)
+        {
+            Debug.Log($"[{nameof(NetworkedPlaneController)}] Pilot died: {Team} {crashReason}");
+            OnPilotDiedRpc(crashReason);
+        }
+
+        public void OnPilotEnteredRespawnArea()
+        {
+            Debug.Log($"[{nameof(NetworkedPlaneController)}] Pilot enter respawn area: {Team}");
+            EnteredRespawnArea?.Invoke(this);
+        }
+
         private void OnPlaneHealthEmpty()
         {
-            Crashed?.Invoke(this, PlaneCrashReason.Destroyed);
+            Crashed?.Invoke(this, PlaneCrashReason.PlaneDestroyed);
         }
-        
+
         [Rpc(SendTo.Server)]
         private void OnPlaneCrashedRpc()
         {
+            if (planePilotEjectController.WasPilotEjected) {
+                Debug.Log($"[{nameof(NetworkedPlaneController)}] (ServerRpc) Plane crashed: {Team} but pilot is alive");
+                return;
+            }
+            
+            Debug.Log($"[{nameof(NetworkedPlaneController)}] (ServerRpc) Plane crashed: {Team} {PlaneCrashReason.Suicide}");
             Crashed?.Invoke(this, PlaneCrashReason.Suicide);
+        }
+        
+        [Rpc(SendTo.Server)]
+        public void OnPilotDiedRpc(PlaneCrashReason crashReason)
+        {
+            Debug.Log($"[{nameof(NetworkedPlaneController)}] (ServerRpc) Pilot died: {Team} {crashReason}");
+            Crashed?.Invoke(this, crashReason);
         }
 
         public override void OnNetworkSpawn()
@@ -70,6 +99,7 @@ namespace Core
         public void Respawn()
         {
             health.Reset();
+            planePilotEjectController.Reset();
             RepawnRpc();
         }
 

@@ -24,6 +24,7 @@ GameObject:
   - component: {fileID: 5304711510785712308}
   - component: {fileID: 8233085328630137065}
   - component: {fileID: 3779647886779789308}
+  - component: {fileID: 6719069784207270054}
   m_Layer: 7
   m_Name: NetworkedPlane
   m_TagString: Player
@@ -254,6 +255,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   health: {fileID: 5304711510785712308}
+  planePilotEjectController: {fileID: 6719069784207270054}
   clientPlaneController: {fileID: 5496406484389376103}
 --- !u!114 &5496406484389376103
 MonoBehaviour:
@@ -268,6 +270,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   networkedPlaneController: {fileID: 5220322714833663955}
+  planePilotEjectController: {fileID: 6719069784207270054}
   planeRotation: {fileID: 1017221826989820144}
   planeSpriteController: {fileID: 3779647886779789308}
   health: {fileID: 5304711510785712308}
@@ -392,6 +395,20 @@ MonoBehaviour:
   flySpireBlue: {fileID: 1215726816, guid: b3b774decf30c0c49a992c50daaf328d, type: 3}
   idleSpriteRed: {fileID: 458853490, guid: c5444ad7e3e653b4f8a247f0572c5020, type: 3}
   flySpireRed: {fileID: 1681883369, guid: c5444ad7e3e653b4f8a247f0572c5020, type: 3}
+--- !u!114 &6719069784207270054
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 504027045366491281}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 80911639b05f44b2a5c256ad71f209c7, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  networkedPlaneController: {fileID: 5220322714833663955}
+  pilotPrefab: {fileID: 6843179935540069913, guid: f2e8a7216b3bd93468d06860204779a2, type: 3}
 --- !u!1 &3363457435959431568
 GameObject:
   m_ObjectHideFlags: 0

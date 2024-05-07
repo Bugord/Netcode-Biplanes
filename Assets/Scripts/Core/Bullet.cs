@@ -1,5 +1,6 @@
 using System.Collections;
 using Core;
+using Pilot;
 using Unity.Netcode;
 using UnityEngine;
 
@@ -17,7 +18,7 @@ public class Bullet : NetworkBehaviour
     {
         transform.SetPositionAndRotation(position, rotation);
         rigidbody2D.velocity = transform.right * speed;
-        
+
         InitRpc(position, rotation);
         StartCoroutine(DestroyBulletWithDelay());
     }
@@ -41,7 +42,7 @@ public class Bullet : NetworkBehaviour
         if (!IsSpawned) {
             return;
         }
-        
+
         NetworkObject.Despawn();
     }
 
@@ -56,11 +57,19 @@ public class Bullet : NetworkBehaviour
                 return;
             }
         }
-        
+
         if (col.TryGetComponent<Health>(out var health)) {
             health.TakeDamage();
         }
 
+        if (col.TryGetComponent<Parachute>(out var parachute)) {
+            parachute.DestroyParachute();
+        }
+
+        if (col.TryGetComponent<NetworkedPilotController>(out var networkedPilotController)) {
+            networkedPilotController.OnPilotShot();
+        }
+        
         NetworkObject.Despawn();
     }
 }

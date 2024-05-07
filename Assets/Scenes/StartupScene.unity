@@ -435,7 +435,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5f539806a8972d04e8f65e421f9b5e13, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  clientAutoConnect: 1
+  clientAutoConnect: 0
   "\u0441onnectionManager": {fileID: 1220961261}
 --- !u!4 &1124728071
 Transform:

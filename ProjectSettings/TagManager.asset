@@ -2,10 +2,11 @@
 %TAG !u! tag:unity3d.com,2011:
 --- !u!78 &1
 TagManager:
-  serializedVersion: 2
+  serializedVersion: 3
   tags:
   - Ground
   - House
+  - RespawnArea
   layers:
   - Default
   - TransparentFX
@@ -17,8 +18,8 @@ TagManager:
   - Plane
   - Bullet
   - Ground
-  - 
-  - 
+  - Pilot
+  - House
   - 
   - 
   - 
@@ -49,3 +50,8 @@ TagManager:
   - name: Plane
     uniqueID: 1564564777
     locked: 0
+  - name: Foreground
+    uniqueID: 1678411919
+    locked: 0
+  m_RenderingLayers:
+  - Default
