@@ -12,6 +12,7 @@ GameObject:
   - component: {fileID: 2550607525782557617}
   - component: {fileID: 3944735360755339700}
   - component: {fileID: 1346819887006969004}
+  - component: {fileID: 7560262002200386066}
   m_Layer: 0
   m_Name: ScorePlane
   m_TagString: Untagged
@@ -126,6 +127,24 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   blueScoreNumberDisplay: {fileID: 2060893058254554426}
   redScoreNumberDisplay: {fileID: 4752024912372674860}
+--- !u!114 &7560262002200386066
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5486452787865106245}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fb962a2c9fdfddd469575338372ce9dd, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  spriteRenderer: {fileID: 2550607525782557617}
+  minSpeed: 0.5
+  maxSpeed: 2
+  minHeight: -3.5
+  maxHeight: 7
+  borderDistance: 8
 --- !u!1001 &3822804446888501304
 PrefabInstance:
   m_ObjectHideFlags: 0

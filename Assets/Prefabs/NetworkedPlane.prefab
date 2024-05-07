@@ -165,7 +165,7 @@ BoxCollider2D:
   m_UsedByEffector: 0
   m_CompositeOperation: 0
   m_CompositeOrder: 0
-  m_Offset: {x: 0, y: 0}
+  m_Offset: {x: 0, y: -0.065}
   m_SpriteTilingProperty:
     border: {x: 0, y: 0, z: 0, w: 0}
     pivot: {x: 0.5, y: 0.5}
@@ -329,9 +329,9 @@ MonoBehaviour:
   planeRotation: {fileID: 1017221826989820144}
   clientNetworkTransform: {fileID: 7451329571336271441}
   planeFlightModifiersData: {fileID: 11400000, guid: 06f23816c69778d4a9677c615a519690, type: 2}
-  engineBaseForce: 9
+  engineBaseForce: 8
   liftBaseForce: 9.81
-  maxSpeed: 10
+  maxSpeed: 8
 --- !u!114 &8455352071101638119
 MonoBehaviour:
   m_ObjectHideFlags: 0
