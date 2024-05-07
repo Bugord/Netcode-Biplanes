@@ -1,5 +1,6 @@
 ﻿using System;
 using Unity.Multiplayer.Samples.Utilities.ClientAuthority;
+using Unity.Netcode;
 using UnityEngine;
 
 namespace Core
@@ -46,6 +47,10 @@ namespace Core
 
         private void OnCollisionEnter2D(Collision2D col)
         {
+            if (!networkedPlaneController.IsOwner) {
+                return;
+            }
+            
             if (!planeMovement.WasEngineStarted) {
                 return;
             }
@@ -74,12 +79,18 @@ namespace Core
         
         public void OnPlaneCrashed()
         {
-            planeParticles.DisableDamageEffects();
-            planeParticles.PlayExplosion();
-            planeSpriteController.SetDestroyedSprite();
+            networkedPlaneController.PlayCrashedGraphicsRpc();   
             planeMovement.DisableMovement();
             planeRotation.DisableRotation();
             planeWeapon.enabled = false;
+        }
+
+        [Rpc(SendTo.ClientsAndHost)]
+        public void PlayCrashedGraphics()
+        {
+            planeParticles.DisableDamageEffects();
+            planeParticles.PlayExplosion();
+            planeSpriteController.SetDestroyedSprite();
         }
 
         private void OnPlaneEngineStarted()

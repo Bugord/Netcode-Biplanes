@@ -22,7 +22,7 @@ public class Bullet : NetworkBehaviour
         StartCoroutine(DestroyBulletWithDelay());
     }
 
-    [Rpc(SendTo.NotServer)]
+    [Rpc(SendTo.ClientsAndHost)]
     public void InitRpc(Vector2 position, Quaternion rotation)
     {
         transform.position = position;

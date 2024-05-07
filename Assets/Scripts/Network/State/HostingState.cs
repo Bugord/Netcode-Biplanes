@@ -1,6 +1,7 @@
 ﻿using UI;
 using Unity.Netcode;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 namespace Network.State
 {
@@ -34,7 +35,7 @@ namespace Network.State
             }
 
             if (ConnectionManager.NetworkManager.ConnectedClientsIds.Count == 2) {
-                GameManager.Instance.StartSession();
+                ConnectionManager.NetworkManager.SceneManager.LoadScene("GameScene", LoadSceneMode.Single);
             }
         }
 

@@ -11,6 +11,10 @@ namespace UI
 
         [SerializeField]
         private Canvas canvas;
+
+        [SerializeField]
+        private GameObject eventSystem;
+        
         [SerializeField]
         private List<BaseScreen> screenPrefabs;
 
@@ -19,6 +23,9 @@ namespace UI
 
         private void Awake()
         {
+            DontDestroyOnLoad(this);
+            DontDestroyOnLoad(eventSystem);
+            
             Instance = this;
 
             cachedScreenPrefabsDictionary = new Dictionary<Type, BaseScreen>();
@@ -32,8 +39,6 @@ namespace UI
                 }
                 cachedScreenPrefabsDictionary.Add(screenType, screenPrefab);
             }
-
-            Push<MainMenuScreen>();
         }
 
         public void PopLast()

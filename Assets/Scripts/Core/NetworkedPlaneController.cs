@@ -73,6 +73,12 @@ namespace Core
             RepawnRpc();
         }
 
+        [Rpc(SendTo.ClientsAndHost)]
+        public void PlayCrashedGraphicsRpc()
+        {
+            clientPlaneController.PlayCrashedGraphics();
+        }
+
         [Rpc(SendTo.Owner)]
         private void RepawnRpc()
         {

@@ -43,19 +43,19 @@ namespace Core
             SetDestroyedSpriteRpc();
         }
 
-        [Rpc(SendTo.NotServer)]
+        [Rpc(SendTo.ClientsAndHost)]
         private void SetDefaultSpriteRpc()
         {
             spriteRenderer.sprite = team == Team.Blue ? idleSpriteBlue : idleSpriteRed;
         }
 
-        [Rpc(SendTo.NotServer)]
+        [Rpc(SendTo.ClientsAndHost)]
         private void SetFlySpriteRpc()
         {
             spriteRenderer.sprite = team == Team.Blue ? flySpireBlue : flySpireRed;
         }
 
-        [Rpc(SendTo.NotServer)]
+        [Rpc(SendTo.ClientsAndHost)]
         private void SetDestroyedSpriteRpc()
         {
             spriteRenderer.sprite = null;

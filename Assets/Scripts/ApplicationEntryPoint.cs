@@ -1,7 +1,9 @@
 using System;
 using Network;
+using UI;
 using Unity.Multiplayer;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 using Random = UnityEngine.Random;
 
 public class ApplicationEntryPoint : MonoBehaviour
@@ -14,7 +16,7 @@ public class ApplicationEntryPoint : MonoBehaviour
 
     [SerializeField]
     ConnectionManager сonnectionManager;
-    
+
     public int PlayersCount => 2;
 
     private void Awake()
@@ -39,17 +41,16 @@ public class ApplicationEntryPoint : MonoBehaviour
                 QualitySettings.vSyncCount = 0;
                 сonnectionManager.StartServerIp(DefaultServerListenIpAddress, listeningPort);
                 break;
-            case MultiplayerRoleFlags.Client: {
-                // SceneManager.LoadScene("MetagameScene");
+            case MultiplayerRoleFlags.ClientAndServer:
+            case MultiplayerRoleFlags.Client:
                 if (clientAutoConnect) {
                     сonnectionManager.StartClientIp($"Client {Random.value}", DefaultClientConnectIpAddress,
                         listeningPort);
                 }
+                else {
+                    NavigationSystem.Instance.Push<MainMenuScreen>();
+                }
                 break;
-            }
-            case MultiplayerRoleFlags.ClientAndServer:
-                throw new ArgumentOutOfRangeException("MultiplayerRole",
-                    "ClientAndServer is an invalid multiplayer role. Please select the Client or Server role.");
         }
     }
 }
