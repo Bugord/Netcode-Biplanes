@@ -1232,6 +1232,7 @@ MonoBehaviour:
   planePrefab: {fileID: 5220322714833663955, guid: 32793090521ff7f4fa7cef0d5012de14, type: 3}
   serverSpawnPoint: {fileID: 1757583484}
   clientSpawnPoint: {fileID: 1024320761}
+  scoreDisplay: {fileID: 1878454629}
   edgeDistance: 14.5
   respawnTime: 1
 --- !u!1652712579 &1855376185
@@ -1243,6 +1244,90 @@ MultiplayerRolesData:
   m_GameObject: {fileID: 1855376181}
   m_GameObjectRolesMask: 2
   m_ComponentsRolesMasks: []
+--- !u!1001 &1878454628
+PrefabInstance:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    serializedVersion: 3
+    m_TransformParent: {fileID: 0}
+    m_Modifications:
+    - target: {fileID: 3944735360755339700, guid: b7e4bc396df569b40bfb40c6e8052472, type: 3}
+      propertyPath: GlobalObjectIdHash
+      value: 432430471
+      objectReference: {fileID: 0}
+    - target: {fileID: 3944735360755339700, guid: b7e4bc396df569b40bfb40c6e8052472, type: 3}
+      propertyPath: InScenePlacedSourceGlobalObjectIdHash
+      value: 2968558794
+      objectReference: {fileID: 0}
+    - target: {fileID: 5486452787865106245, guid: b7e4bc396df569b40bfb40c6e8052472, type: 3}
+      propertyPath: m_Name
+      value: ScorePlane
+      objectReference: {fileID: 0}
+    - target: {fileID: 6945574691399128992, guid: b7e4bc396df569b40bfb40c6e8052472, type: 3}
+      propertyPath: m_LocalScale.x
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 6945574691399128992, guid: b7e4bc396df569b40bfb40c6e8052472, type: 3}
+      propertyPath: m_LocalScale.y
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 6945574691399128992, guid: b7e4bc396df569b40bfb40c6e8052472, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: -7.75
+      objectReference: {fileID: 0}
+    - target: {fileID: 6945574691399128992, guid: b7e4bc396df569b40bfb40c6e8052472, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 6.92
+      objectReference: {fileID: 0}
+    - target: {fileID: 6945574691399128992, guid: b7e4bc396df569b40bfb40c6e8052472, type: 3}
+      propertyPath: m_LocalPosition.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6945574691399128992, guid: b7e4bc396df569b40bfb40c6e8052472, type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 6945574691399128992, guid: b7e4bc396df569b40bfb40c6e8052472, type: 3}
+      propertyPath: m_LocalRotation.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6945574691399128992, guid: b7e4bc396df569b40bfb40c6e8052472, type: 3}
+      propertyPath: m_LocalRotation.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6945574691399128992, guid: b7e4bc396df569b40bfb40c6e8052472, type: 3}
+      propertyPath: m_LocalRotation.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6945574691399128992, guid: b7e4bc396df569b40bfb40c6e8052472, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6945574691399128992, guid: b7e4bc396df569b40bfb40c6e8052472, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6945574691399128992, guid: b7e4bc396df569b40bfb40c6e8052472, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    m_RemovedComponents: []
+    m_RemovedGameObjects: []
+    m_AddedGameObjects: []
+    m_AddedComponents: []
+  m_SourcePrefab: {fileID: 100100000, guid: b7e4bc396df569b40bfb40c6e8052472, type: 3}
+--- !u!114 &1878454629 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 1346819887006969004, guid: b7e4bc396df569b40bfb40c6e8052472, type: 3}
+  m_PrefabInstance: {fileID: 1878454628}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e02268d23b1b455fae29afda6ee22846, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &1878571542
 GameObject:
   m_ObjectHideFlags: 0
@@ -1323,3 +1408,4 @@ SceneRoots:
   - {fileID: 980799093}
   - {fileID: 1054705959}
   - {fileID: 570408788}
+  - {fileID: 1878454628}

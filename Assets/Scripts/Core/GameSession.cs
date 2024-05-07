@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using Network;
+using ScoreUI;
 using Unity.Netcode;
 using UnityEngine;
 
@@ -16,6 +17,9 @@ namespace Core
 
         [SerializeField]
         private Transform clientSpawnPoint;
+
+        [SerializeField]
+        private ScoreDisplay scoreDisplay;
 
         [SerializeField]
         private float edgeDistance = 14.5f;
@@ -63,6 +67,8 @@ namespace Core
                     ChangeScore(plane.Team, -1);
                     break;
             }
+            
+            scoreDisplay.SetScore(teamsScore[Team.Blue], teamsScore[Team.Red]);
 
             StartCoroutine(RespawnWithDelay(plane, respawnTime));
         }
