@@ -8,7 +8,7 @@ namespace Pilot
     public class PilotParachuteController : NetworkBehaviour
     {
         public event Action ParachuteOpened; 
-        public event Action ParachuteHiden; 
+        public event Action ParachuteHidden; 
         
         [SerializeField]
         private Parachute parachute;
@@ -45,7 +45,7 @@ namespace Pilot
         private void ParachuteSetActiveRpc(bool isActive)
         {
             parachute.gameObject.SetActive(isActive);
-            ParachuteHiden?.Invoke();
+            ParachuteHidden?.Invoke();
         }
 
         [Rpc(SendTo.ClientsAndHost)]

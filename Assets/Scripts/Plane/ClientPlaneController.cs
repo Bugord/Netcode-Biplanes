@@ -98,7 +98,7 @@ namespace Core
 
             planeParticles.Reset();
             planeRotation.Reset();
-            planeWeapon.enabled = true;
+            planeWeapon.enabled = false;
         }
 
         private void OnPlaneEngineStarted()
@@ -107,6 +107,7 @@ namespace Core
             planeSpriteController.SetFlySprite();
             planeRotation.EnableRotationUp();
             planeMovement.DisableInput();
+            planeWeapon.enabled = true;
         }
 
         private void OnPlaneTookOff()

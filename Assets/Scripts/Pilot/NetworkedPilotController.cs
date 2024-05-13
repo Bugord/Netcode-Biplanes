@@ -17,7 +17,16 @@ namespace Pilot
 
         [SerializeField]
         private ClientPilotController clientPilotController;
-        
+
+        public override void OnNetworkSpawn()
+        {
+            base.OnNetworkSpawn();
+
+            if (!IsOwner) {
+                pilotMovement.enabled = false;
+            }
+        }
+
         public void Init(float edgeDistance)
         {
             InitRpc(edgeDistance);

@@ -32,16 +32,14 @@ namespace Pilot
 
         private void Awake()
         {
-            networkedPilotController.OnNetworkSpawnHook += OnNetworkSpawn;
             pilotParachuteController.ParachuteOpened += OnParachuteOpened;
-            pilotParachuteController.ParachuteHiden += OnParachuteHidden;
+            pilotParachuteController.ParachuteHidden += OnParachuteHidden;
         }
 
         private void OnDestroy()
         {
-            networkedPilotController.OnNetworkSpawnHook -= OnNetworkSpawn;
             pilotParachuteController.ParachuteOpened -= OnParachuteOpened;
-            pilotParachuteController.ParachuteHiden -= OnParachuteHidden;
+            pilotParachuteController.ParachuteHidden -= OnParachuteHidden;
         }
         
         public void OnPilotDead()
@@ -50,13 +48,6 @@ namespace Pilot
             animator.SetTrigger(Die);
             pilotMovement.SetDeadMovement();
             pilotParachuteController.HideParachute();
-        }
-
-        private void OnNetworkSpawn()
-        {
-            if (!networkedPilotController.IsOwner) {
-                pilotMovement.enabled = false;
-            }
         }
 
         private void OnParachuteHidden()
@@ -85,7 +76,7 @@ namespace Pilot
                 return;
             }
 
-            if (Input.GetKeyDown(KeyCode.E)) {
+            if (state == PilotState.Falling && Input.GetKeyDown(KeyCode.E)) {
                 pilotParachuteController.OpenParachute();
             }
 

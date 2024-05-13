@@ -26,7 +26,15 @@ public class ApplicationEntryPoint : MonoBehaviour
 
     private void Start()
     {
+#if !UNITY_EDITOR
+        SetWindowResolution();
+#endif
         InitializeNetworkLogic();
+    }
+
+    private void SetWindowResolution()
+    {
+        Screen.SetResolution(512, 512, FullScreenMode.Windowed);
     }
 
     private void InitializeNetworkLogic()
