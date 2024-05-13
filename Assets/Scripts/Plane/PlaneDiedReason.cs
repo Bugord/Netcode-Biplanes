@@ -1,4 +1,4 @@
-﻿namespace Core
+﻿namespace Plane
 {
     public enum PlaneDiedReason
     {

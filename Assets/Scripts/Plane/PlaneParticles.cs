@@ -1,7 +1,6 @@
 ﻿using UnityEngine;
-using UnityEngine.Serialization;
 
-namespace Core
+namespace Plane
 {
     public class PlaneParticles : MonoBehaviour
     {

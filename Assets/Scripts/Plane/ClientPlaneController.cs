@@ -1,9 +1,7 @@
-﻿using System;
-using Unity.Multiplayer.Samples.Utilities.ClientAuthority;
-using Unity.Netcode;
+﻿using Core;
 using UnityEngine;
 
-namespace Core
+namespace Plane
 {
     [RequireComponent(typeof(NetworkedPlaneController))]
     public class ClientPlaneController : MonoBehaviour
@@ -31,11 +29,11 @@ namespace Core
 
         [SerializeField]
         private PlaneWeapon planeWeapon;
-
+        
         private void Awake()
         {
             networkedPlaneController.OnNetworkSpawnHook += OnNetworkSpawn;
-            health.HealthEmpty += OnPlaneCrashed;
+            health.HealthEmpty += KillPlane;
             health.HealthChanged += OnHealthChanged;
             planeMovement.EngineStarted += OnPlaneEngineStarted;
             planeMovement.TookOff += OnPlaneTookOff;
@@ -45,7 +43,7 @@ namespace Core
         private void OnDestroy()
         {
             networkedPlaneController.OnNetworkSpawnHook -= OnNetworkSpawn;
-            health.HealthEmpty -= OnPlaneCrashed;
+            health.HealthEmpty -= KillPlane;
             health.HealthChanged -= OnHealthChanged;
             planeMovement.EngineStarted -= OnPlaneEngineStarted;
             planeMovement.TookOff -= OnPlaneTookOff;
@@ -64,12 +62,12 @@ namespace Core
 
             if (col.gameObject.CompareTag("Ground") && planeMovement.DidTookOff) {
                 networkedPlaneController.OnPlaneCrashed();
-                OnPlaneCrashed();
+                KillPlane();
             }
 
             if (col.gameObject.CompareTag("House")) {
                 networkedPlaneController.OnPlaneCrashed();
-                OnPlaneCrashed();
+                KillPlane();
             }
         }
 
@@ -100,7 +98,23 @@ namespace Core
             planeRotation.Reset();
             planeWeapon.enabled = false;
         }
+        
+        public void KillPlane()
+        {
+            planePilotEjectController.DisableEjection();
+            networkedPlaneController.PlayCrashedGraphicsRpc();
+            planeMovement.DisableMovement();
+            planeRotation.DisableRotation();
+            planeWeapon.enabled = false;
+        }
 
+        public void PlayCrashedGraphics()
+        {
+            planeParticles.DisableDamageEffects();
+            planeParticles.PlayExplosion();
+            planeSpriteController.SetDestroyedSprite();
+        }
+        
         private void OnPlaneEngineStarted()
         {
             planePilotEjectController.EnableEjection();
@@ -116,25 +130,8 @@ namespace Core
             planeMovement.EnableInput();
         }
 
-        public void OnPlaneCrashed()
-        {
-            planePilotEjectController.DisableEjection();
-            networkedPlaneController.PlayCrashedGraphicsRpc();
-            planeMovement.DisableMovement();
-            planeRotation.DisableRotation();
-            planeWeapon.enabled = false;
-        }
-
-        public void PlayCrashedGraphics()
-        {
-            planeParticles.DisableDamageEffects();
-            planeParticles.PlayExplosion();
-            planeSpriteController.SetDestroyedSprite();
-        }
-
         private void OnHealthChanged(int health)
         {
-            Debug.Log($"{networkedPlaneController.Team} health changed {health}");
             switch (health) {
                 case 2:
                     planeParticles.SmokeSetActive(true);

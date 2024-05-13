@@ -2,11 +2,9 @@
 using Pilot;
 using Unity.Mathematics;
 using Unity.Netcode;
-using Unity.VisualScripting;
 using UnityEngine;
-using UnityEngine.Serialization;
 
-namespace Core
+namespace Plane
 {
     public class PlanePilotEjectController : NetworkBehaviour
     {
@@ -39,7 +37,6 @@ namespace Core
 
         public void Reset()
         {
-            Debug.Log($"[{nameof(PlanePilotEjectController)}] Reset");
             WasPilotEjected = false;
         }
 
@@ -55,7 +52,6 @@ namespace Core
 
         private void EjectPilot()
         {
-            Debug.Log($"[{nameof(PlanePilotEjectController)}] Pilot ejected");
             SpawnPilotRpc(transform.position, transform.up);
             PilotEjected?.Invoke();
             WasPilotEjected = true;
@@ -66,7 +62,6 @@ namespace Core
         {
             WasPilotEjected = true;
 
-            Debug.Log($"[{nameof(PlanePilotEjectController)}] (ServerRpc) Pilot ejected");
             pilot = Instantiate(pilotPrefab, position, quaternion.identity);
             pilot.GetComponent<NetworkObject>().SpawnWithOwnership(OwnerClientId);
             pilot.Init(networkedPlaneController.EdgeDistance);
@@ -87,7 +82,6 @@ namespace Core
 
         private void OnPilotDied(PlaneDiedReason reason)
         {
-            Debug.Log($"[{nameof(PlanePilotEjectController)}] Pilot died");
             pilot.Died -= OnPilotDied;
             pilot.EnteredRespawnArea -= OnPilotEnteredRespawnArea;
             networkedPlaneController.OnPilotDied(reason);

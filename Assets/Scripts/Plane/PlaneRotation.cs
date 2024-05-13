@@ -2,7 +2,7 @@
 using Unity.Netcode;
 using UnityEngine;
 
-namespace Core
+namespace Plane
 {
     public class PlaneRotation : NetworkBehaviour
     {

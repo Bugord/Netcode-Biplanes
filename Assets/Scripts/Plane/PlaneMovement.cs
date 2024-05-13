@@ -1,9 +1,9 @@
 ﻿using System;
-using Pilot;
+using Core;
 using Unity.Multiplayer.Samples.Utilities.ClientAuthority;
 using UnityEngine;
 
-namespace Core
+namespace Plane
 {
     public class PlaneMovement : MonoBehaviour
     {

@@ -1,8 +1,8 @@
-﻿using System;
+﻿using Core;
 using Unity.Netcode;
 using UnityEngine;
 
-namespace Core
+namespace Plane
 {
     public class PlaneSpriteController : NetworkBehaviour
     {

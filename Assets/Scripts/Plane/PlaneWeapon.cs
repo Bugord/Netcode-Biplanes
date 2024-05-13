@@ -1,52 +1,55 @@
 ﻿using Unity.Netcode;
 using UnityEngine;
 
-public class PlaneWeapon : NetworkBehaviour
+namespace Plane
 {
-    [SerializeField]
-    private Bullet bulletPrefab;
-
-    [SerializeField]
-    private float fireCooldown;
-
-    [SerializeField]
-    private float bulletSpawnDistance = 1.3f;
-
-    private float lastFireTime;
-
-    private void Update()
+    public class PlaneWeapon : NetworkBehaviour
     {
-        ProcessFire();
-    }
+        [SerializeField]
+        private Bullet bulletPrefab;
 
-    public override void OnNetworkSpawn()
-    {
-        if (!IsOwner) {
-            enabled = false;
-        }
-    }
+        [SerializeField]
+        private float fireCooldown;
 
-    private void ProcessFire()
-    {
-        if (lastFireTime + fireCooldown > Time.time) {
-            return;
+        [SerializeField]
+        private float bulletSpawnDistance = 1.3f;
+
+        private float lastFireTime;
+
+        private void Update()
+        {
+            ProcessFire();
         }
 
-        if (!Input.GetKeyDown(KeyCode.Space)) {
-            return;
+        public override void OnNetworkSpawn()
+        {
+            if (!IsOwner) {
+                enabled = false;
+            }
         }
 
-        lastFireTime = Time.time;
+        private void ProcessFire()
+        {
+            if (lastFireTime + fireCooldown > Time.time) {
+                return;
+            }
 
-        FireRpc(transform.position + transform.right * bulletSpawnDistance, transform.rotation);
-    }
+            if (!Input.GetKeyDown(KeyCode.Space)) {
+                return;
+            }
 
-    [Rpc(SendTo.Server)]
-    private void FireRpc(Vector3 position, Quaternion rotation)
-    {
-        var bullet = NetworkObjectPool.Singleton.GetNetworkObject(bulletPrefab.gameObject).GetComponent<Bullet>();
+            lastFireTime = Time.time;
 
-        bullet.GetComponent<NetworkObject>().SpawnWithOwnership(OwnerClientId, true);
-        bullet.Init(position, rotation);
+            FireRpc(transform.position + transform.right * bulletSpawnDistance, transform.rotation);
+        }
+
+        [Rpc(SendTo.Server)]
+        private void FireRpc(Vector3 position, Quaternion rotation)
+        {
+            var bullet = NetworkObjectPool.Singleton.GetNetworkObject(bulletPrefab.gameObject).GetComponent<Bullet>();
+
+            bullet.GetComponent<NetworkObject>().SpawnWithOwnership(OwnerClientId, true);
+            bullet.Init(position, rotation);
+        }
     }
 }

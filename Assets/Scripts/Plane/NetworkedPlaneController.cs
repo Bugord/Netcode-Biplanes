@@ -1,9 +1,10 @@
 ﻿using System;
+using Core;
 using Unity.Multiplayer.Samples.Utilities;
 using Unity.Netcode;
 using UnityEngine;
 
-namespace Core
+namespace Plane
 {
     public class NetworkedPlaneController : NetcodeHooks
     {
@@ -26,6 +27,8 @@ namespace Core
         private readonly NetworkVariable<Vector3> spawnPosition = new NetworkVariable<Vector3>();
 
         private readonly Vector3 mirroredPlayerRotation = new Vector3(0, 180, 0);
+
+        public bool IsCrashed { get; private set; }
 
         public Team Team => team.Value;
         public float EdgeDistance => edgeDistance.Value;
@@ -55,13 +58,11 @@ namespace Core
 
         public void OnPilotDied(PlaneDiedReason diedReason)
         {
-            Debug.Log($"[{nameof(NetworkedPlaneController)}] Pilot died: {Team} {diedReason}");
             OnPilotDiedRpc(diedReason);
         }
 
         public void OnPilotEnteredRespawnArea()
         {
-            Debug.Log($"[{nameof(NetworkedPlaneController)}] Pilot enter respawn area: {Team}");
             EnteredRespawnArea?.Invoke(this);
         }
 
@@ -73,19 +74,18 @@ namespace Core
         [Rpc(SendTo.Server)]
         private void OnPlaneCrashedRpc()
         {
+            IsCrashed = true;
+            
             if (planePilotEjectController.WasPilotEjected) {
-                Debug.Log($"[{nameof(NetworkedPlaneController)}] (ServerRpc) Plane crashed: {Team} but pilot is alive");
                 return;
             }
             
-            Debug.Log($"[{nameof(NetworkedPlaneController)}] (ServerRpc) Plane crashed: {Team} {PlaneDiedReason.Suicide}");
             Crashed?.Invoke(this, PlaneDiedReason.Suicide);
         }
         
         [Rpc(SendTo.Server)]
         public void OnPilotDiedRpc(PlaneDiedReason diedReason)
         {
-            Debug.Log($"[{nameof(NetworkedPlaneController)}] (ServerRpc) Pilot died: {Team} {diedReason}");
             Crashed?.Invoke(this, diedReason);
         }
 
@@ -98,6 +98,7 @@ namespace Core
 
         public void Respawn()
         {
+            IsCrashed = false;
             health.Reset();
             planePilotEjectController.Reset();
             RepawnRpc();

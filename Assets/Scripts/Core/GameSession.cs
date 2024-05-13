@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using Network;
 using Pilot;
+using Plane;
 using ScoreUI;
 using Unity.Netcode;
 using UnityEngine;
