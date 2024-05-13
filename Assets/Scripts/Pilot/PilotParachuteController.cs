@@ -1,19 +1,36 @@
 ﻿using System;
 using Unity.Netcode;
-using Unity.VisualScripting;
 using UnityEngine;
 
 namespace Pilot
 {
     public class PilotParachuteController : NetworkBehaviour
     {
-        public event Action ParachuteOpened; 
-        public event Action ParachuteHidden; 
-        
+        public event Action ParachuteOpened;
+        public event Action ParachuteHidden;
+
         [SerializeField]
         private Parachute parachute;
 
+        private readonly NetworkVariable<int> parachuteDirection = new NetworkVariable<int>(0,
+            NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Owner);
+
+        private readonly NetworkVariable<bool> parachuteIsEnabled = new NetworkVariable<bool>(false,
+            NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Owner);
+
         public bool WasParachuteOpened { get; private set; }
+
+        private void Awake()
+        {
+            parachuteDirection.OnValueChanged += OnParachuteDirectionChanged;
+            parachuteIsEnabled.OnValueChanged += OnParachuteIsEnabledChanged;
+        }
+
+        public override void OnDestroy()
+        {
+            parachuteDirection.OnValueChanged -= OnParachuteDirectionChanged;
+            parachuteIsEnabled.OnValueChanged -= OnParachuteIsEnabledChanged;
+        }
 
         public void Reset()
         {
@@ -27,31 +44,49 @@ namespace Pilot
             }
 
             WasParachuteOpened = true;
-            ParachuteSetActiveRpc(true);
-            ParachuteOpened?.Invoke();
+            SetParachuteIsEnabled(true);
         }
 
         public void HideParachute()
         {
-            ParachuteSetActiveRpc(false);
+            SetParachuteIsEnabled(false);
         }
 
         public void SetParachuteDirection(int direction)
         {
-            SetParachuteDirectionRpc(direction);
+            parachuteDirection.Value = direction;
         }
 
-        [Rpc(SendTo.ClientsAndHost)]
-        private void ParachuteSetActiveRpc(bool isActive)
+        public void DestroyParachute()
+        {
+            DestroyParachuteRpc();
+        }
+
+        [Rpc(SendTo.Owner)]
+        private void DestroyParachuteRpc()
+        {
+            HideParachute();
+        }
+
+        private void SetParachuteIsEnabled(bool isEnabled)
+        {
+            parachuteIsEnabled.Value = isEnabled;
+            if (isEnabled) {
+                ParachuteOpened?.Invoke();
+            }
+            else {
+                ParachuteHidden?.Invoke();
+            }
+        }
+
+        private void OnParachuteDirectionChanged(int previousDirection, int newDirection)
+        {
+            parachute.SetDirection(newDirection);
+        }
+
+        private void OnParachuteIsEnabledChanged(bool wasActive, bool isActive)
         {
             parachute.gameObject.SetActive(isActive);
-            ParachuteHidden?.Invoke();
-        }
-
-        [Rpc(SendTo.ClientsAndHost)]
-        private void SetParachuteDirectionRpc(int direction)
-        {
-            parachute.SetDirection(direction);
         }
     }
 }

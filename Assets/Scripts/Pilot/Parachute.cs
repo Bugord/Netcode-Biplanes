@@ -23,7 +23,7 @@ namespace Pilot
 
         public void DestroyParachute()
         {
-            pilotParachuteController.HideParachute();
+            pilotParachuteController.DestroyParachute();
         }
     }
 }

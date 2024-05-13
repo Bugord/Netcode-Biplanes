@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections;
-using Core;
-using Unity.Netcode;
+﻿using Core;
 using UnityEngine;
 
 namespace Pilot
@@ -24,7 +21,6 @@ namespace Pilot
         private PilotParachuteController pilotParachuteController;
 
         private PilotState state;
-
         private bool isInRespawnArea;
 
         private static readonly int Die = Animator.StringToHash("Die");
