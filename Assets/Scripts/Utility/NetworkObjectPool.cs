@@ -20,6 +20,9 @@ public class NetworkObjectPool : NetworkBehaviour
     [SerializeField]
     private List<PoolConfigObject> pooledPrefabsList;
 
+    [SerializeField]
+    private Transform defaultRoot;
+
     private readonly HashSet<GameObject> prefabs = new HashSet<GameObject>();
 
     private readonly Dictionary<GameObject, Queue<NetworkObject>> pooledObjects = new Dictionary<GameObject, Queue<NetworkObject>>();
@@ -125,7 +128,7 @@ public class NetworkObjectPool : NetworkBehaviour
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     private GameObject CreateInstance(GameObject prefab)
     {
-        return Instantiate(prefab);
+        return Instantiate(prefab, defaultRoot);
     }
 
     /// <summary>

@@ -837,6 +837,7 @@ MonoBehaviour:
   pooledPrefabsList:
   - prefab: {fileID: 7689472883258377054, guid: 9a585ef832eabf4498408a83f960cd2b, type: 3}
     prewarmCount: 30
+  defaultRoot: {fileID: 1878571543}
 --- !u!1001 &5457014478186282754
 PrefabInstance:
   m_ObjectHideFlags: 0
