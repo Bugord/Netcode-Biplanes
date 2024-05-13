@@ -85,7 +85,7 @@ namespace Core
             networkedPlaneController.OnPilotEnteredRespawnArea();
         }
 
-        private void OnPilotDied(PlaneCrashReason reason)
+        private void OnPilotDied(PlaneDiedReason reason)
         {
             Debug.Log($"[{nameof(PlanePilotEjectController)}] Pilot died");
             pilot.Died -= OnPilotDied;

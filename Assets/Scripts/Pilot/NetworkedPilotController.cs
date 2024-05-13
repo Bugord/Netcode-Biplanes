@@ -9,7 +9,7 @@ namespace Pilot
 {
     public class NetworkedPilotController : NetcodeHooks
     {
-        public event Action<PlaneCrashReason> Died;
+        public event Action<PlaneDiedReason> Died;
         public event Action EnteredRespawnArea;
 
         [SerializeField]
@@ -17,15 +17,6 @@ namespace Pilot
 
         [SerializeField]
         private ClientPilotController clientPilotController;
-
-        public override void OnNetworkSpawn()
-        {
-            base.OnNetworkSpawn();
-
-            if (!IsOwner) {
-                pilotMovement.enabled = false;
-            }
-        }
 
         public void Init(float edgeDistance)
         {
@@ -37,32 +28,17 @@ namespace Pilot
             JumpRpc(ejectDirection);
         }
 
-        [Rpc(SendTo.Server)]
-        public void OnPilotDiedRpc(PlaneCrashReason crashReason)
+        public void KillPlayerWithReason(PlaneDiedReason diedReason)
         {
-            Debug.Log($"[{nameof(NetworkedPilotController)}] (ServerRpc) Pilot died {crashReason}");
-            Died?.Invoke(crashReason);
-            DespawnWithDelay();
+            PlayKillVisualsRpc();
+            KillPlayerRpc(diedReason);
         }
 
-        public void OnPilotEnterRespawnArea()
+        public void RespawnPlayer()
         {
-            OnPilotEnterSafeAreaRpc();
+            RespawnPlayerRpc();
         }
 
-        public void OnPilotShot()
-        {
-            Debug.Log($"[{nameof(NetworkedPilotController)}] Pilot shot");
-            OnPilotDiedRpc(PlaneCrashReason.PilotShot);
-            OnPilotDeadRpc();
-        }
-
-        [Rpc(SendTo.ClientsAndHost)]
-        private void OnPilotDeadRpc()
-        {
-            clientPilotController.OnPilotDead();
-        }
-        
         [Rpc(SendTo.Owner)]
         private void InitRpc(float edgeDistance)
         {
@@ -81,10 +57,23 @@ namespace Pilot
         }
 
         [Rpc(SendTo.Server)]
-        private void OnPilotEnterSafeAreaRpc()
+        private void RespawnPlayerRpc()
         {
             EnteredRespawnArea?.Invoke();
             NetworkObject.Despawn();
+        }
+
+        [Rpc(SendTo.Server)]
+        private void KillPlayerRpc(PlaneDiedReason diedReason)
+        {
+            Died?.Invoke(diedReason);
+            DespawnWithDelay();
+        }
+
+        [Rpc(SendTo.Owner)]
+        private void PlayKillVisualsRpc()
+        {
+            clientPilotController.KillPlayer();
         }
         
         private IEnumerator DespawnWithDelayRoutine()

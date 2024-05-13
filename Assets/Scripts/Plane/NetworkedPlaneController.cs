@@ -7,7 +7,7 @@ namespace Core
 {
     public class NetworkedPlaneController : NetcodeHooks
     {
-        public event Action<NetworkedPlaneController, PlaneCrashReason> Crashed;
+        public event Action<NetworkedPlaneController, PlaneDiedReason> Crashed;
         public event Action<NetworkedPlaneController> EnteredRespawnArea; 
 
         [SerializeField]
@@ -53,10 +53,10 @@ namespace Core
             OnPlaneCrashedRpc();
         }
 
-        public void OnPilotDied(PlaneCrashReason crashReason)
+        public void OnPilotDied(PlaneDiedReason diedReason)
         {
-            Debug.Log($"[{nameof(NetworkedPlaneController)}] Pilot died: {Team} {crashReason}");
-            OnPilotDiedRpc(crashReason);
+            Debug.Log($"[{nameof(NetworkedPlaneController)}] Pilot died: {Team} {diedReason}");
+            OnPilotDiedRpc(diedReason);
         }
 
         public void OnPilotEnteredRespawnArea()
@@ -67,7 +67,7 @@ namespace Core
 
         private void OnPlaneHealthEmpty()
         {
-            Crashed?.Invoke(this, PlaneCrashReason.PlaneDestroyed);
+            Crashed?.Invoke(this, PlaneDiedReason.PlaneDestroyed);
         }
 
         [Rpc(SendTo.Server)]
@@ -78,15 +78,15 @@ namespace Core
                 return;
             }
             
-            Debug.Log($"[{nameof(NetworkedPlaneController)}] (ServerRpc) Plane crashed: {Team} {PlaneCrashReason.Suicide}");
-            Crashed?.Invoke(this, PlaneCrashReason.Suicide);
+            Debug.Log($"[{nameof(NetworkedPlaneController)}] (ServerRpc) Plane crashed: {Team} {PlaneDiedReason.Suicide}");
+            Crashed?.Invoke(this, PlaneDiedReason.Suicide);
         }
         
         [Rpc(SendTo.Server)]
-        public void OnPilotDiedRpc(PlaneCrashReason crashReason)
+        public void OnPilotDiedRpc(PlaneDiedReason diedReason)
         {
-            Debug.Log($"[{nameof(NetworkedPlaneController)}] (ServerRpc) Pilot died: {Team} {crashReason}");
-            Crashed?.Invoke(this, crashReason);
+            Debug.Log($"[{nameof(NetworkedPlaneController)}] (ServerRpc) Pilot died: {Team} {diedReason}");
+            Crashed?.Invoke(this, diedReason);
         }
 
         public override void OnNetworkSpawn()

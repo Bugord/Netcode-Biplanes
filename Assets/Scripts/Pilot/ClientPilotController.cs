@@ -1,4 +1,5 @@
-﻿using Core;
+﻿using System;
+using Core;
 using UnityEngine;
 
 namespace Pilot
@@ -23,37 +24,48 @@ namespace Pilot
         private PilotState state;
         private bool isInRespawnArea;
 
-        private static readonly int Die = Animator.StringToHash("Die");
-        private static readonly int Grounded = Animator.StringToHash("Grounded");
+        private readonly int Die = Animator.StringToHash("Die");
+        private readonly int Grounded = Animator.StringToHash("Grounded");
+
+        private const string RespawnAreaTag = "RespawnArea";
+        private const string GroundTag = "Ground";
+        private const string HouseTag = "House";
 
         private void Awake()
         {
             pilotParachuteController.ParachuteOpened += OnParachuteOpened;
             pilotParachuteController.ParachuteHidden += OnParachuteHidden;
+            networkedPilotController.OnNetworkSpawnHook += OnNetworkSpawn;
         }
 
         private void OnDestroy()
         {
             pilotParachuteController.ParachuteOpened -= OnParachuteOpened;
             pilotParachuteController.ParachuteHidden -= OnParachuteHidden;
+            networkedPilotController.OnNetworkSpawnHook -= OnNetworkSpawn;
         }
-        
-        public void OnPilotDead()
+
+        private void OnNetworkSpawn()
+        {
+            if (!networkedPilotController.IsOwner) {
+                enabled = false;
+                pilotMovement.enabled = false;
+                pilotParachuteController.enabled = false;
+            }
+        }
+
+        private void Update()
+        {
+            ProcessParachuteOpening();
+            ProcessMovement();
+        }
+
+        public void KillPlayer()
         {
             state = PilotState.Dead;
             animator.SetTrigger(Die);
             pilotMovement.SetDeadMovement();
             pilotParachuteController.HideParachute();
-        }
-
-        private void OnParachuteHidden()
-        {
-            if (state != PilotState.Parachuted) {
-                return;
-            }
-
-            state = PilotState.Falling;
-            pilotMovement.SetFallingMovement();
         }
 
         private void OnParachuteOpened()
@@ -66,23 +78,40 @@ namespace Pilot
             pilotMovement.SetParachuteMovement();
         }
 
-        private void Update()
+        private void OnParachuteHidden()
         {
-            if (!networkedPilotController.IsOwner) {
+            if (state != PilotState.Parachuted) {
                 return;
             }
 
-            if (state == PilotState.Falling && Input.GetKeyDown(KeyCode.E)) {
-                pilotParachuteController.OpenParachute();
+            state = PilotState.Falling;
+            pilotMovement.SetFallingMovement();
+        }
+
+        private void SetStateGrounded()
+        {
+            state = PilotState.Grounded;
+            pilotParachuteController.HideParachute();
+            animator.SetTrigger(Grounded);
+            if (isInRespawnArea) {
+                networkedPilotController.RespawnPlayer();
+            }
+        }
+
+        private void ProcessParachuteOpening()
+        {
+            if (state != PilotState.Falling) {
+                return;
             }
 
-            var direction = 0;
-            if (Input.GetKey(KeyCode.A)) {
-                direction = -1;
+            if (Input.GetKeyDown(KeyCode.E)) {
+                pilotParachuteController.OpenParachute();
             }
-            if (Input.GetKey(KeyCode.D)) {
-                direction = 1;
-            }
+        }
+
+        private void ProcessMovement()
+        {
+            var direction = GetMovement();
 
             switch (state) {
                 case PilotState.Parachuted:
@@ -95,13 +124,24 @@ namespace Pilot
             }
         }
 
+        private int GetMovement()
+        {
+            if (Input.GetKey(KeyCode.A)) {
+                return -1;
+            }
+
+            if (Input.GetKey(KeyCode.D)) {
+                return 1;
+            }
+
+            return 0;
+        }
+
         private void OnCollisionEnter2D(Collision2D collision2D)
         {
-            if (collision2D.gameObject.CompareTag("Ground") || collision2D.gameObject.CompareTag("House")) {
+            if (collision2D.gameObject.CompareTag(GroundTag) || collision2D.gameObject.CompareTag(HouseTag)) {
                 if (collision2D.relativeVelocity.y >= fallSpeedToDie) {
-                    Debug.Log($"[{nameof(NetworkedPilotController)}] Pilot fell");
-                    OnPilotDead();
-                    networkedPilotController.OnPilotDiedRpc(PlaneCrashReason.Suicide);
+                    networkedPilotController.KillPlayerWithReason(PlaneDiedReason.Suicide);
                 }
                 else {
                     SetStateGrounded();
@@ -109,24 +149,25 @@ namespace Pilot
             }
         }
 
-        private void SetStateGrounded()
+        private void OnTriggerEnter2D(Collider2D collider2D)
         {
-            state = PilotState.Grounded;
-            pilotParachuteController.HideParachute();
-            animator.SetTrigger(Grounded);
-            if (isInRespawnArea) {
-                networkedPilotController.OnPilotEnterRespawnArea();
+            if (!collider2D.CompareTag(RespawnAreaTag)) {
+                return;
+            }
+
+            isInRespawnArea = true;
+            if (state == PilotState.Grounded) {
+                networkedPilotController.RespawnPlayer();
             }
         }
 
-        private void OnTriggerEnter2D(Collider2D collider2D)
+        private void OnTriggerExit2D(Collider2D collider2D)
         {
-            if (collider2D.CompareTag("RespawnArea")) {
-                isInRespawnArea = true;
-                if (state == PilotState.Grounded) {
-                    networkedPilotController.OnPilotEnterRespawnArea();
-                }
+            if (!collider2D.CompareTag(RespawnAreaTag)) {
+                return;
             }
+
+            isInRespawnArea = false;
         }
     }
 }

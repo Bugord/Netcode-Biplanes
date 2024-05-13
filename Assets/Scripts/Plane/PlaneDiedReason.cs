@@ -1,6 +1,6 @@
 ﻿namespace Core
 {
-    public enum PlaneCrashReason
+    public enum PlaneDiedReason
     {
         Suicide,
         PlaneDestroyed,

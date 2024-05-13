@@ -65,17 +65,17 @@ namespace Core
             plane.Respawn();
         }
 
-        private void OnPlaneCrash(NetworkedPlaneController plane, PlaneCrashReason reason)
+        private void OnPlaneCrash(NetworkedPlaneController plane, PlaneDiedReason reason)
         {
             Debug.Log($"[{nameof(GameSession)}] Plane crashed: {plane.Team} {reason}");
             switch (reason) {
-                case PlaneCrashReason.PlaneDestroyed:
+                case PlaneDiedReason.PlaneDestroyed:
                     ChangeScore(plane.Team == Team.Red ? Team.Blue : Team.Red, 1);
                     break;
-                case PlaneCrashReason.Suicide:
+                case PlaneDiedReason.Suicide:
                     ChangeScore(plane.Team, -1);
                     break;
-                case PlaneCrashReason.PilotShot:
+                case PlaneDiedReason.PilotShot:
                     ChangeScore(plane.Team == Team.Red ? Team.Blue : Team.Red, 2);
                     break;
             }

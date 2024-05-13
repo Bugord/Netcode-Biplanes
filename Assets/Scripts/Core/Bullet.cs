@@ -67,7 +67,7 @@ public class Bullet : NetworkBehaviour
         }
 
         if (col.TryGetComponent<NetworkedPilotController>(out var networkedPilotController)) {
-            networkedPilotController.OnPilotShot();
+            networkedPilotController.KillPlayerWithReason(PlaneDiedReason.PilotShot);
         }
         
         NetworkObject.Despawn();
