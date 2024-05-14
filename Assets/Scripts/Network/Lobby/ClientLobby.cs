@@ -32,7 +32,7 @@ namespace Network.Lobby
 
         private void OnNetworkSpawn()
         {
-            lobbyScreen = NavigationSystem.Push<LobbyScreen>();
+            lobbyScreen = NavigationSystem.Replace<LobbyScreen>();
             lobbyScreen.ReadyButtonPressed += OnReadyButtonPressed;
             
             networkLobby.LobbyPlayers.OnListChanged += OnLobbyPlayerStateChanged;

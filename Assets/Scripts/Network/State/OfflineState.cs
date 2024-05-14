@@ -1,5 +1,7 @@
 ﻿using UI;
+using UI.Screens;
 using Unity.Multiplayer;
+using UnityEngine.SceneManagement;
 
 namespace Network.State
 {
@@ -14,6 +16,8 @@ namespace Network.State
         public override void Enter()
         {
             ConnectionManager.NetworkManager.Shutdown();
+            SceneManager.LoadScene("MainMenuScene");
+            NavigationSystem.Replace<MainMenuScreen>();
         }
 
         public override void Exit()

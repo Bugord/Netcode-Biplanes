@@ -43,7 +43,7 @@ namespace UI.Screens
 
         public void OnBackButtonPressed()
         {
-            NetworkManager.Singleton.Shutdown();
+            ConnectionManager.RequestShutdown();
             NavigationSystem.Replace<MainMenuScreen>();
         }
     }

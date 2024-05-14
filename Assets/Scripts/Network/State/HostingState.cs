@@ -49,6 +49,8 @@ namespace Network.State
             }
 
             SessionManager.DisconnectClient(clientId);
+            
+            ConnectionManager.ChangeState(ConnectionManager.Offline);
         }
 
         public override void OnUserRequestedShutdown()

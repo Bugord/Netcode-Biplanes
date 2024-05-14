@@ -23,6 +23,7 @@ public class ApplicationEntryPoint : MonoBehaviour
     private void Awake()
     {
         DontDestroyOnLoad(gameObject);
+        DontDestroyOnLoad(сonnectionManager.gameObject);
     }
 
     private void Start()
@@ -53,10 +54,10 @@ public class ApplicationEntryPoint : MonoBehaviour
             case MultiplayerRoleFlags.ClientAndServer:
             case MultiplayerRoleFlags.Client:
                 if (clientAutoConnect) {
-                    сonnectionManager.StartClientIp($"Client {Random.value}", DefaultClientConnectIpAddress,
-                        listeningPort);
+                    сonnectionManager.StartClientIp($"Client {Random.value}", DefaultClientConnectIpAddress, listeningPort);
                 }
                 else {
+                    SceneManager.LoadScene("MainMenuScene");
                     NavigationSystem.Instance.Push<MainMenuScreen>();
                 }
                 break;

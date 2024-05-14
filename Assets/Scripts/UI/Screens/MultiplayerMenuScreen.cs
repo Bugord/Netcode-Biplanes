@@ -2,6 +2,7 @@
 using Network;
 using TMPro;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 namespace UI.Screens
 {
@@ -16,17 +17,20 @@ namespace UI.Screens
         [SerializeField]
         private TMP_InputField portInput;
 
+        private ConnectionManager ConnectionManager => ConnectionManager.Instance;
+
         public void OnBackButtonPressed()
         {
-            NavigationSystem.Instance.Replace<MainMenuScreen>();
+            NavigationSystem.Replace<MainMenuScreen>();
         }
 
         public void OnHostButtonPressed()
         {
             var ipAddress = Sanitize(ipAddressInput.text);
             var port = ushort.Parse(Sanitize(portInput.text));
-
-            ConnectionManager.Instance.StartHostIp(usernameInput.text, ipAddress, port);
+            
+            ConnectionManager.StartHostIp(usernameInput.text, ipAddress, port);
+            ConnectionManager.NetworkManager.SceneManager.LoadScene("LobbyScene", LoadSceneMode.Single);
         }
 
         public void OnClientButtonPressed()
@@ -34,7 +38,7 @@ namespace UI.Screens
             var ipAddress = Sanitize(ipAddressInput.text);
             var port = ushort.Parse(Sanitize(portInput.text));
 
-            ConnectionManager.Instance.StartClientIp(usernameInput.text, ipAddress, port);
+            ConnectionManager.StartClientIp(usernameInput.text, ipAddress, port);
         }
 
         static string Sanitize(string dirtyString)

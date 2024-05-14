@@ -34,10 +34,6 @@ namespace Network.Lobby
             netcodeHooks.NetworkManager.SceneManager.OnSceneEvent += OnLoadComplete;
             netcodeHooks.NetworkManager.OnClientDisconnectCallback += OnClientDisconnectCallback;
             networkLobby.PlayerReadyPressed += OnPlayerReadyPressed;
-
-            if (netcodeHooks.IsHost) {
-                AddPlayerToLobby(netcodeHooks.NetworkManager.LocalClientId);
-            }
         }
 
         private void OnNetworkDespawn()
