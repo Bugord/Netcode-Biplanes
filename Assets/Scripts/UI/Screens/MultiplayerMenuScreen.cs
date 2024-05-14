@@ -1,10 +1,9 @@
 ﻿using System.Text.RegularExpressions;
 using Network;
 using TMPro;
-using Unity.Netcode;
 using UnityEngine;
 
-namespace UI
+namespace UI.Screens
 {
     public class MultiplayerMenuScreen : BaseScreen
     {

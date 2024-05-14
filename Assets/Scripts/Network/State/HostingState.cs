@@ -1,4 +1,6 @@
-﻿using UI;
+﻿using Network.Lobby;
+using UI;
+using UI.Screens;
 using Unity.Netcode;
 using UnityEngine;
 using UnityEngine.SceneManagement;
@@ -96,7 +98,7 @@ namespace Network.State
             if (gameReturnStatus == ConnectStatus.Success) {
                 SessionManager.SetupConnectingPlayerSessionData(clientId, connectionPayload.playerId,
                     new SessionPlayerData(clientId, connectionPayload.playerName, true));
-
+                
                 // connection approval will create a player object for you
                 response.Approved = true;
                 return;

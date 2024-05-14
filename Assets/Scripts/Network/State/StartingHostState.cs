@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Threading.Tasks;
 using Network.ConnectionMethods;
+using Network.Lobby;
 using Unity.Multiplayer.Samples.BossRoom;
 using Unity.Netcode;
 using UnityEngine;
@@ -11,6 +12,8 @@ namespace Network.State
     {
         private BaseConnectionMethod connectionMethod;
 
+        private SessionManager<SessionPlayerData> SessionManager => SessionManager<SessionPlayerData>.Instance;
+        
         public StartingHostState(ConnectionManager connectionManager) : base(connectionManager)
         {
         }
@@ -45,7 +48,7 @@ namespace Network.State
                 var payload = System.Text.Encoding.UTF8.GetString(connectionData);
                 var connectionPayload = JsonUtility.FromJson<ConnectionPayload>(payload);
 
-                SessionManager<SessionPlayerData>.Instance.SetupConnectingPlayerSessionData(clientId,
+                SessionManager.SetupConnectingPlayerSessionData(clientId,
                     connectionPayload.playerId,
                     new SessionPlayerData(clientId, connectionPayload.playerName, true, true));
 

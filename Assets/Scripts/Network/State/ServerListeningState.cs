@@ -1,3 +1,4 @@
+using Network.Lobby;
 using Unity.Netcode;
 using UnityEngine;
 using UnityEngine.SceneManagement;
@@ -15,7 +16,7 @@ namespace Network.State
         private bool minPlayerConnected = false;
         
         private SessionManager<SessionPlayerData> SessionManager => SessionManager<SessionPlayerData>.Instance;
-
+        
         public ServerListeningState(ConnectionManager connectionManager) : base(connectionManager)
         {
         }
@@ -34,7 +35,7 @@ namespace Network.State
         {
             Debug.Log($"[{nameof(ServerListeningState)}] {clientId} connected to the server.");
             
-            var playerData = SessionManager<SessionPlayerData>.Instance.GetPlayerData(clientId);
+            var playerData = SessionManager.GetPlayerData(clientId);
             if (playerData == null) {
                 Debug.LogError($"[{nameof(ServerListeningState)}] No player data associated with client {clientId}");
                 var reason = JsonUtility.ToJson(ConnectStatus.GenericDisconnect);
@@ -43,7 +44,7 @@ namespace Network.State
 
             if (!minPlayerConnected && ConnectionManager.NetworkManager.ConnectedClientsIds.Count == 2) {
                 minPlayerConnected = true;
-                ConnectionManager.NetworkManager.SceneManager.LoadScene("GameScene", LoadSceneMode.Single);
+                // ConnectionManager.NetworkManager.SceneManager.LoadScene("GameScene", LoadSceneMode.Single);
             }
         }
 
