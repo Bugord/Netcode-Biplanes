@@ -34,6 +34,10 @@ namespace Network.Lobby
             netcodeHooks.NetworkManager.SceneManager.OnSceneEvent += OnLoadComplete;
             netcodeHooks.NetworkManager.OnClientDisconnectCallback += OnClientDisconnectCallback;
             networkLobby.PlayerReadyPressed += OnPlayerReadyPressed;
+
+            if (netcodeHooks.IsHost) {
+                AddPlayerToLobby(netcodeHooks.NetworkManager.LocalClientId);
+            }
         }
 
         private void OnNetworkDespawn()
@@ -63,7 +67,8 @@ namespace Network.Lobby
             var playerData = playerSessionData.Value;
 
             var team = GetAwailableTeam();
-            networkLobby.LobbyPlayers.Add(new LobbyPlayerState(clientId, playerData.PlayerName, team));
+            networkLobby.LobbyPlayers.Add(new LobbyPlayerState(clientId, playerData.PlayerName, team,
+                netcodeHooks.NetworkManager.LocalClientId == clientId));
             Debug.Log($"[{nameof(ServerLobby)}] Player {playerData.PlayerName}({clientId}) joined the lobby");
         }
 
@@ -95,6 +100,7 @@ namespace Network.Lobby
             }
 
             if (readyCount == 2) {
+                networkLobby.CloseLobbyUIRpc();
                 netcodeHooks.NetworkManager.SceneManager.LoadScene("GameScene", LoadSceneMode.Single);
             }
         }

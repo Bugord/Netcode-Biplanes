@@ -1,18 +1,26 @@
-﻿using Network.Lobby;
+﻿using System;
+using Network.Lobby;
 using TMPro;
 using UnityEngine;
+using UnityEngine.UI;
 
 namespace UI
 {
     public class PlayerSeat : MonoBehaviour
     {
         [SerializeField]
-        private TextMeshProUGUI playerText;
+        private TextMeshProUGUI playerNameText;
+
+        [SerializeField]
+        private TextMeshProUGUI isReadyText;
+
+        [SerializeField]
+        private Button readyButton;
 
         public void SetData(LobbyPlayerState playerState)
         {
-            playerText.text =
-                $"{playerState.Name}({playerState.ClientId}) - {playerState.Team} - {(playerState.IsReady ? "Ready" : "Not Ready")}";
+            playerNameText.text = playerState.Name.Value;
+            isReadyText.text = playerState.IsReady ? "Ready" : "Not Ready";
         }
     }
 }

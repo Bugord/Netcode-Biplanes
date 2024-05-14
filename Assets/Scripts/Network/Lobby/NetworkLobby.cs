@@ -1,4 +1,6 @@
 ﻿using System;
+using UI;
+using UI.Screens;
 using Unity.Multiplayer.Samples.Utilities;
 using Unity.Netcode;
 
@@ -21,6 +23,13 @@ namespace Network.Lobby
         public void ToggleIsReadyRpc(ulong clientId)
         {
             PlayerReadyPressed?.Invoke(clientId);
+        }
+
+        [Rpc(SendTo.ClientsAndHost)]
+        public void CloseLobbyUIRpc()
+        {
+            NavigationSystem.Instance.PopToRoot();
+            NavigationSystem.Instance.Push<OnlineScreen>();
         }
     }
 }

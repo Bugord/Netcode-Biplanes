@@ -1,7 +1,4 @@
-﻿using Network.Lobby;
-using UI;
-using UI.Screens;
-using Unity.Netcode;
+﻿using Unity.Netcode;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
@@ -18,8 +15,6 @@ namespace Network.State
 
         public override void Enter()
         {
-            NavigationSystem.Instance.PopToRoot();
-            NavigationSystem.Instance.Push<OnlineScreen>();
         }
 
         public override void Exit()
@@ -34,10 +29,6 @@ namespace Network.State
                 Debug.LogError($"No player data associated with client {clientId}");
                 var reason = JsonUtility.ToJson(ConnectStatus.GenericDisconnect);
                 ConnectionManager.NetworkManager.DisconnectClient(clientId, reason);
-            }
-
-            if (ConnectionManager.NetworkManager.ConnectedClientsIds.Count == 2) {
-                ConnectionManager.NetworkManager.SceneManager.LoadScene("GameScene", LoadSceneMode.Single);
             }
         }
 
@@ -98,7 +89,7 @@ namespace Network.State
             if (gameReturnStatus == ConnectStatus.Success) {
                 SessionManager.SetupConnectingPlayerSessionData(clientId, connectionPayload.playerId,
                     new SessionPlayerData(clientId, connectionPayload.playerName, true));
-                
+
                 // connection approval will create a player object for you
                 response.Approved = true;
                 return;

@@ -12,7 +12,7 @@ namespace Network.Lobby
         public bool IsReady;
         public Team Team;
 
-        public LobbyPlayerState(ulong clientId, string name, Team team)
+        public LobbyPlayerState(ulong clientId, string name, Team team, bool isLocal)
         {
             ClientId = clientId;
             Name = new FixedString32Bytes(name);
@@ -20,9 +20,17 @@ namespace Network.Lobby
             Team = team;
         }
 
+        public void NetworkSerialize<T>(BufferSerializer<T> serializer) where T : IReaderWriter
+        {
+            serializer.SerializeValue(ref ClientId);
+            serializer.SerializeValue(ref Name);
+            serializer.SerializeValue(ref IsReady);
+            serializer.SerializeValue(ref Team);
+        }
+
         public bool Equals(LobbyPlayerState other)
         {
-            return Name.Equals(other.Name) && IsReady == other.IsReady;
+            return ClientId == other.ClientId && Name.Equals(other.Name) && IsReady == other.IsReady && Team == other.Team;
         }
 
         public override bool Equals(object obj)
@@ -32,15 +40,7 @@ namespace Network.Lobby
 
         public override int GetHashCode()
         {
-            return HashCode.Combine(Name, IsReady);
-        }
-
-        public void NetworkSerialize<T>(BufferSerializer<T> serializer) where T : IReaderWriter
-        {
-            serializer.SerializeValue(ref ClientId);
-            serializer.SerializeValue(ref Name);
-            serializer.SerializeValue(ref IsReady);
-            serializer.SerializeValue(ref Team);
+            return HashCode.Combine(ClientId, Name, IsReady, (int)Team);
         }
     }
 }

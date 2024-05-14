@@ -13,19 +13,26 @@ namespace UI.Screens
         [SerializeField]
         private List<PlayerSeat> playerSeats;
 
+        private void Awake()
+        {
+            foreach (var playerSeat in playerSeats) {
+                playerSeat.gameObject.SetActive(false);
+            }
+        }
+
         public void UpdatePlayersList(NetworkList<LobbyPlayerState> playersData)
         {
             for (var i = 0; i < playerSeats.Count; i++) {
                 var playerSeat = playerSeats[i];
-                if (i > playersData.Count) {
-                    playerSeat.enabled = false;
+                if (i >= playersData.Count) {
+                    playerSeat.gameObject.SetActive(false);
                     break;
                 }
-                
+                playerSeat.gameObject.SetActive(true);
                 playerSeat.SetData(playersData[i]);
             }
         }
-        
+
         public void OnReadyButtonPressed()
         {
             ReadyButtonPressed?.Invoke();
