@@ -4,9 +4,10 @@ namespace UI.Screens
 {
     public abstract class BaseScreen : MonoBehaviour
     {
+        protected NavigationSystem NavigationSystem => UI.NavigationSystem.Instance;
         public virtual void Close()
         {
-            NavigationSystem.Instance.PopScreen(this);
+            NavigationSystem.PopScreen(this);
         }
 
         public virtual void Destroy()

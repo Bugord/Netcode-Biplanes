@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using Network;
 using Network.Lobby;
 using Unity.Netcode;
 using UnityEngine;
@@ -12,6 +13,8 @@ namespace UI.Screens
 
         [SerializeField]
         private List<PlayerSeat> playerSeats;
+        
+        private ConnectionManager ConnectionManager => ConnectionManager.Instance;
 
         private void Awake()
         {
@@ -36,6 +39,12 @@ namespace UI.Screens
         public void OnReadyButtonPressed()
         {
             ReadyButtonPressed?.Invoke();
+        }
+
+        public void OnBackButtonPressed()
+        {
+            NetworkManager.Singleton.Shutdown();
+            NavigationSystem.Replace<MainMenuScreen>();
         }
     }
 }
